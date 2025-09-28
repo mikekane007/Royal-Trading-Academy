@@ -1,0 +1,214 @@
+.rta-footer {
+  background-color: var(--rta-gray-900);
+  color: var(--rta-gray-300);
+  padding: var(--rta-spacing-3xl) 0 0;
+  margin-top: auto;
+}
+
+.rta-footer-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  gap: var(--rta-spacing-2xl);
+  margin-bottom: var(--rta-spacing-2xl);
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: var(--rta-spacing-xl);
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--rta-spacing-lg);
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    gap: var(--rta-spacing-lg);
+  }
+}
+
+.rta-footer-column {
+  &.rta-footer-brand {
+    @media (max-width: 768px) {
+      grid-column: 1 / -1;
+    }
+  }
+}
+
+// Brand Section
+.rta-footer-logo {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--rta-spacing-md);
+}
+
+.rta-logo {
+  margin-right: var(--rta-spacing-sm);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--rta-accent);
+}
+
+.rta-footer-brand-text {
+  font-size: var(--rta-font-size-lg);
+  font-weight: 600;
+  color: var(--rta-white);
+}
+
+.rta-footer-description {
+  margin-bottom: var(--rta-spacing-lg);
+  line-height: 1.6;
+  color: var(--rta-gray-400);
+}
+
+.rta-footer-social {
+  display: flex;
+  gap: var(--rta-spacing-md);
+}
+
+.rta-social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: var(--rta-gray-800);
+  color: var(--rta-gray-400);
+  border-radius: var(--rta-border-radius-md);
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background-color: var(--rta-primary);
+    color: var(--rta-white);
+    transform: translateY(-2px);
+  }
+}
+
+// Column Titles
+.rta-footer-title {
+  font-size: var(--rta-font-size-lg);
+  font-weight: 600;
+  color: var(--rta-white);
+  margin-bottom: var(--rta-spacing-lg);
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 30px;
+    height: 2px;
+    background-color: var(--rta-accent);
+  }
+}
+
+// Links
+.rta-footer-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.rta-footer-links li {
+  margin-bottom: var(--rta-spacing-sm);
+}
+
+.rta-footer-link {
+  color: var(--rta-gray-400);
+  text-decoration: none;
+  font-size: var(--rta-font-size-base);
+  transition: color 0.2s ease-in-out;
+  display: inline-block;
+
+  &:hover {
+    color: var(--rta-accent);
+  }
+}
+
+// Contact Info
+.rta-footer-contact {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rta-spacing-md);
+}
+
+.rta-contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--rta-spacing-sm);
+  color: var(--rta-gray-400);
+  font-size: var(--rta-font-size-sm);
+  line-height: 1.5;
+
+  svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: var(--rta-accent);
+  }
+}
+
+// Footer Bottom
+.rta-footer-bottom {
+  border-top: 1px solid var(--rta-gray-800);
+  padding: var(--rta-spacing-lg) 0;
+}
+
+.rta-footer-bottom-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--rta-spacing-md);
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+.rta-footer-copyright {
+  margin: 0;
+  color: var(--rta-gray-500);
+  font-size: var(--rta-font-size-sm);
+}
+
+.rta-footer-legal {
+  display: flex;
+  align-items: center;
+  gap: var(--rta-spacing-md);
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: var(--rta-spacing-sm);
+  }
+}
+
+.rta-footer-disclaimer {
+  color: var(--rta-gray-500);
+  font-size: var(--rta-font-size-xs);
+  font-style: italic;
+}
+
+// Responsive adjustments
+@media (max-width: 480px) {
+  .rta-footer {
+    padding: var(--rta-spacing-2xl) 0 0;
+  }
+
+  .rta-footer-content {
+    margin-bottom: var(--rta-spacing-xl);
+  }
+
+  .rta-footer-social {
+    justify-content: center;
+  }
+
+  .rta-contact-item {
+    font-size: var(--rta-font-size-xs);
+  }
+}

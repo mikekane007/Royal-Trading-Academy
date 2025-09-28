@@ -276,6 +276,16 @@ html, body {
       color: white;
     }
   }
+  
+  &.rta-btn-sm {
+    padding: var(--rta-spacing-xs) var(--rta-spacing-md);
+    font-size: var(--rta-font-size-sm);
+  }
+  
+  &.rta-btn-block {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 // Card Styles

@@ -1,0 +1,44 @@
+.rta-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.rta-main-content {
+  flex: 1;
+  padding-top: 80px; // Account for fixed header height
+  min-height: calc(100vh - 80px);
+  
+  @media (max-width: 768px) {
+    padding-top: 70px; // Slightly smaller on mobile
+    min-height: calc(100vh - 70px);
+  }
+}
+
+// Ensure proper spacing and layout
+.rta-layout {
+  // Smooth scrolling for anchor links
+  scroll-behavior: smooth;
+  
+  // Prevent horizontal overflow
+  overflow-x: hidden;
+}
+
+// Add some responsive breakpoints for consistent layout
+@media (max-width: 1200px) {
+  .rta-main-content {
+    // Maintain consistent spacing on tablets
+  }
+}
+
+@media (max-width: 768px) {
+  .rta-main-content {
+    // Mobile-specific adjustments
+  }
+}
+
+@media (max-width: 480px) {
+  .rta-main-content {
+    // Small mobile adjustments
+  }
+}

@@ -1,0 +1,107 @@
+<header class="rta-header" [class.scrolled]="isScrolled">
+  <div class="rta-container">
+    <nav class="rta-nav">
+      <!-- Logo and Brand -->
+      <div class="rta-nav-brand">
+        <a routerLink="/" class="rta-brand-link" (click)="closeMobileMenu()">
+          <div class="rta-logo">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Crown Icon Placeholder -->
+              <path d="M8 28L12 16L16 20L20 12L24 20L28 16L32 28H8Z" fill="currentColor"/>
+              <path d="M6 30H34V32H6V30Z" fill="currentColor"/>
+              <circle cx="12" cy="16" r="2" fill="currentColor"/>
+              <circle cx="20" cy="12" r="2" fill="currentColor"/>
+              <circle cx="28" cy="16" r="2" fill="currentColor"/>
+            </svg>
+          </div>
+          <span class="rta-brand-text">Royal Trading Academy</span>
+        </a>
+      </div>
+
+      <!-- Desktop Navigation -->
+      <div class="rta-nav-menu">
+        <ul class="rta-nav-list">
+          <li class="rta-nav-item">
+            <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="rta-nav-link">
+              Home
+            </a>
+          </li>
+          <li class="rta-nav-item">
+            <a routerLink="/courses" routerLinkActive="active" class="rta-nav-link">
+              Courses
+            </a>
+          </li>
+          <li class="rta-nav-item">
+            <a routerLink="/about" routerLinkActive="active" class="rta-nav-link">
+              About
+            </a>
+          </li>
+          <li class="rta-nav-item">
+            <a routerLink="/contact" routerLinkActive="active" class="rta-nav-link">
+              Contact
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Auth Buttons -->
+      <div class="rta-nav-auth">
+        <a routerLink="/login" class="rta-btn rta-btn-outline rta-btn-sm">
+          Login
+        </a>
+        <a routerLink="/register" class="rta-btn rta-btn-primary rta-btn-sm">
+          Sign Up
+        </a>
+      </div>
+
+      <!-- Mobile Menu Toggle -->
+      <button 
+        class="rta-mobile-toggle" 
+        (click)="toggleMobileMenu()"
+        [class.active]="isMobileMenuOpen"
+        aria-label="Toggle mobile menu">
+        <span class="rta-hamburger-line"></span>
+        <span class="rta-hamburger-line"></span>
+        <span class="rta-hamburger-line"></span>
+      </button>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="rta-mobile-menu" [class.open]="isMobileMenuOpen">
+      <ul class="rta-mobile-nav-list">
+        <li class="rta-mobile-nav-item">
+          <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" 
+             class="rta-mobile-nav-link" (click)="closeMobileMenu()">
+            Home
+          </a>
+        </li>
+        <li class="rta-mobile-nav-item">
+          <a routerLink="/courses" routerLinkActive="active" 
+             class="rta-mobile-nav-link" (click)="closeMobileMenu()">
+            Courses
+          </a>
+        </li>
+        <li class="rta-mobile-nav-item">
+          <a routerLink="/about" routerLinkActive="active" 
+             class="rta-mobile-nav-link" (click)="closeMobileMenu()">
+            About
+          </a>
+        </li>
+        <li class="rta-mobile-nav-item">
+          <a routerLink="/contact" routerLinkActive="active" 
+             class="rta-mobile-nav-link" (click)="closeMobileMenu()">
+            Contact
+          </a>
+        </li>
+        <li class="rta-mobile-nav-item rta-mobile-auth">
+          <a routerLink="/login" class="rta-btn rta-btn-outline rta-btn-block" (click)="closeMobileMenu()">
+            Login
+          </a>
+          <a routerLink="/register" class="rta-btn rta-btn-primary rta-btn-block" (click)="closeMobileMenu()">
+            Sign Up
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</header>

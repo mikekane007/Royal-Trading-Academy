@@ -8,7 +8,7 @@
   - Configure environment files and add placeholder assets folder for future logo/images
   - _Requirements: All requirements need proper project foundation_
 
-- [ ] 2. Create core layout and navigation components for Royal Trading Academy
+- [x] 2. Create core layout and navigation components for Royal Trading Academy
   - Implement HeaderComponent with "Royal Trading Academy" branding and navigation menu
   - Create sticky navigation with "Home", "Courses", "About", "Contact" and login/signup buttons
   - Build FooterComponent with Royal Trading Academy branding and multi-column layout
