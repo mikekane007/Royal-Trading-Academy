@@ -263,7 +263,7 @@
 }
 
 .rta-star-filled {
-  color: #fbbf24;
+  color: var(--rta-accent-dark);
   font-size: 1rem;
 }
 
@@ -491,20 +491,23 @@
 .rta-testimonial-results {
   text-align: center;
   padding: var(--rta-spacing-md);
-  background: var(--rta-success-light);
+  background: linear-gradient(135deg, var(--rta-accent-light) 0%, var(--rta-accent) 100%);
   border-radius: var(--rta-border-radius-md);
+  border: 2px solid var(--rta-primary);
 }
 
 .rta-profit {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--rta-success);
+  color: var(--rta-primary-dark);
   margin-bottom: var(--rta-spacing-xs);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .rta-timeframe {
-  color: var(--rta-text-secondary);
+  color: var(--rta-primary);
   font-size: 0.875rem;
+  font-weight: 500;
 }
 
 // Call to Action Section
