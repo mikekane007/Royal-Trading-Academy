@@ -1,0 +1,223 @@
+// Register component styles - similar to login but with additional features
+.register-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 1rem;
+}
+
+.register-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 500px;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+  }
+}
+
+.register-header {
+  text-align: center;
+  margin-bottom: 2rem;
+
+  .register-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #1a202c;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .register-subtitle {
+    color: #718096;
+    font-size: 1rem;
+    margin: 0;
+  }
+}
+
+.register-form {
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-label {
+    display: block;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  .input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    padding-right: 3rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    background: #f8fafc;
+
+    &:focus {
+      outline: none;
+      border-color: #667eea;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    &.error {
+      border-color: #e53e3e;
+      background: #fef5f5;
+    }
+  }
+
+  .password-toggle {
+    position: absolute;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: #a0aec0;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .password-strength {
+    margin-top: 0.5rem;
+    
+    .strength-indicators {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.25rem;
+      font-size: 0.75rem;
+    }
+
+    .strength-item {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      color: #a0aec0;
+
+      &.valid {
+        color: #38a169;
+      }
+    }
+  }
+
+  .checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    cursor: pointer;
+    font-size: 0.875rem;
+    color: #374151;
+  }
+
+  .checkbox-input {
+    position: absolute;
+    opacity: 0;
+  }
+
+  .checkbox-custom {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #e2e8f0;
+    border-radius: 4px;
+    margin-right: 0.5rem;
+    margin-top: 0.1rem;
+    flex-shrink: 0;
+  }
+
+  .error-message {
+    color: #e53e3e;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+
+    &.global-error {
+      background: #fef5f5;
+      border: 1px solid #fed7d7;
+      border-radius: 6px;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+    }
+  }
+
+  .success-message {
+    background: #f0fff4;
+    border: 1px solid #9ae6b4;
+    border-radius: 6px;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    color: #276749;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .submit-button {
+    width: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.register-footer {
+  text-align: center;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e2e8f0;
+
+  .signin-text {
+    color: #718096;
+    font-size: 0.875rem;
+    margin: 0;
+  }
+
+  .signin-link {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 0.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .register-form .form-row {
+    grid-template-columns: 1fr;
+  }
+}

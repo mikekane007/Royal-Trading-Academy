@@ -1,15 +1,14 @@
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { CanActivateFn } from '@angular/router';
+import { AuthService } from '../services/auth/auth.service';
+import { UserRole } from '../models/user/user.model';
 
 export const authGuard: CanActivateFn = (route, state) => {
+  const authService = inject(AuthService);
   const router = inject(Router);
   
-  // TODO: Implement actual authentication check
-  // This is a placeholder implementation
-  const isAuthenticated = false; // Replace with actual auth service check
-  
-  if (isAuthenticated) {
+  if (authService.isAuthenticated()) {
     return true;
   } else {
     router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
@@ -18,31 +17,44 @@ export const authGuard: CanActivateFn = (route, state) => {
 };
 
 export const adminGuard: CanActivateFn = (route, state) => {
+  const authService = inject(AuthService);
   const router = inject(Router);
   
-  // TODO: Implement actual role-based authentication check
-  // This is a placeholder implementation
-  const isAdmin = false; // Replace with actual auth service check
-  
-  if (isAdmin) {
+  if (authService.isAuthenticated() && authService.hasRole(UserRole.ADMIN)) {
     return true;
-  } else {
+  } else if (authService.isAuthenticated()) {
     router.navigate(['/unauthorized']);
+    return false;
+  } else {
+    router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
     return false;
   }
 };
 
 export const instructorGuard: CanActivateFn = (route, state) => {
+  const authService = inject(AuthService);
   const router = inject(Router);
   
-  // TODO: Implement actual role-based authentication check
-  // This is a placeholder implementation
-  const isInstructor = false; // Replace with actual auth service check
+  if (authService.isAuthenticated() && 
+      (authService.hasRole(UserRole.INSTRUCTOR) || authService.hasRole(UserRole.ADMIN))) {
+    return true;
+  } else if (authService.isAuthenticated()) {
+    router.navigate(['/unauthorized']);
+    return false;
+  } else {
+    router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
+    return false;
+  }
+};
+
+export const guestGuard: CanActivateFn = (route, state) => {
+  const authService = inject(AuthService);
+  const router = inject(Router);
   
-  if (isInstructor) {
+  if (!authService.isAuthenticated()) {
     return true;
   } else {
-    router.navigate(['/unauthorized']);
+    router.navigate(['/dashboard']);
     return false;
   }
 };

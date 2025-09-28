@@ -1,0 +1,253 @@
+<div class="register-container">
+  <div class="register-card">
+    <div class="register-header">
+      <h1 class="register-title">Join Royal Trading Academy</h1>
+      <p class="register-subtitle">Create your account and start your trading journey</p>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form" novalidate>
+      <!-- Name Fields -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="firstName" class="form-label">First Name</label>
+          <input
+            id="firstName"
+            type="text"
+            formControlName="firstName"
+            class="form-input"
+            [class.error]="hasError('firstName')"
+            placeholder="Enter your first name"
+            autocomplete="given-name"
+            (input)="onInputChange()"
+          />
+          <div class="error-message" *ngIf="hasError('firstName')">
+            {{ getErrorMessage('firstName') }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="lastName" class="form-label">Last Name</label>
+          <input
+            id="lastName"
+            type="text"
+            formControlName="lastName"
+            class="form-input"
+            [class.error]="hasError('lastName')"
+            placeholder="Enter your last name"
+            autocomplete="family-name"
+            (input)="onInputChange()"
+          />
+          <div class="error-message" *ngIf="hasError('lastName')">
+            {{ getErrorMessage('lastName') }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Email Field -->
+      <div class="form-group">
+        <label for="email" class="form-label">Email Address</label>
+        <div class="input-wrapper">
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            class="form-input"
+            [class.error]="hasError('email')"
+            placeholder="Enter your email address"
+            autocomplete="email"
+            (input)="onInputChange()"
+          />
+          <div class="input-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+              <polyline points="22,6 12,13 2,6"></polyline>
+            </svg>
+          </div>
+        </div>
+        <div class="error-message" *ngIf="hasError('email')">
+          {{ getErrorMessage('email') }}
+        </div>
+      </div>
+
+      <!-- Password Field -->
+      <div class="form-group">
+        <label for="password" class="form-label">Password</label>
+        <div class="input-wrapper">
+          <input
+            id="password"
+            [type]="showPassword ? 'text' : 'password'"
+            formControlName="password"
+            class="form-input"
+            [class.error]="hasError('password')"
+            placeholder="Create a strong password"
+            autocomplete="new-password"
+            (input)="onInputChange()"
+          />
+          <button
+            type="button"
+            class="password-toggle"
+            (click)="togglePasswordVisibility('password')"
+            [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+          >
+            <svg *ngIf="!showPassword" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <svg *ngIf="showPassword" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+              <line x1="1" y1="1" x2="23" y2="23"></line>
+            </svg>
+          </button>
+        </div>
+        
+        <!-- Password Strength Indicators -->
+        <div class="password-strength" *ngIf="registerForm.get('password')?.value">
+          <div class="strength-indicators">
+            <div class="strength-item" [class.valid]="getPasswordStrength().hasUpperCase">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20,6 9,17 4,12"></polyline>
+              </svg>
+              <span>Uppercase letter</span>
+            </div>
+            <div class="strength-item" [class.valid]="getPasswordStrength().hasLowerCase">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20,6 9,17 4,12"></polyline>
+              </svg>
+              <span>Lowercase letter</span>
+            </div>
+            <div class="strength-item" [class.valid]="getPasswordStrength().hasNumeric">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20,6 9,17 4,12"></polyline>
+              </svg>
+              <span>Number</span>
+            </div>
+            <div class="strength-item" [class.valid]="getPasswordStrength().hasSpecialChar">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20,6 9,17 4,12"></polyline>
+              </svg>
+              <span>Special character</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="error-message" *ngIf="hasError('password')">
+          {{ getErrorMessage('password') }}
+        </div>
+      </div>
+
+      <!-- Confirm Password Field -->
+      <div class="form-group">
+        <label for="confirmPassword" class="form-label">Confirm Password</label>
+        <div class="input-wrapper">
+          <input
+            id="confirmPassword"
+            [type]="showConfirmPassword ? 'text' : 'password'"
+            formControlName="confirmPassword"
+            class="form-input"
+            [class.error]="hasError('confirmPassword')"
+            placeholder="Confirm your password"
+            autocomplete="new-password"
+            (input)="onInputChange()"
+          />
+          <button
+            type="button"
+            class="password-toggle"
+            (click)="togglePasswordVisibility('confirmPassword')"
+            [attr.aria-label]="showConfirmPassword ? 'Hide password' : 'Show password'"
+          >
+            <svg *ngIf="!showConfirmPassword" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <svg *ngIf="showConfirmPassword" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+              <line x1="1" y1="1" x2="23" y2="23"></line>
+            </svg>
+          </button>
+        </div>
+        <div class="error-message" *ngIf="hasError('confirmPassword')">
+          {{ getErrorMessage('confirmPassword') }}
+        </div>
+      </div>
+
+      <!-- Terms and Marketing -->
+      <div class="form-group">
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            formControlName="acceptTerms"
+            class="checkbox-input"
+          />
+          <span class="checkbox-custom"></span>
+          <span class="checkbox-text">
+            I agree to the <a href="/terms" target="_blank">Terms of Service</a> and 
+            <a href="/privacy" target="_blank">Privacy Policy</a>
+          </span>
+        </label>
+        <div class="error-message" *ngIf="hasError('acceptTerms')">
+          {{ getErrorMessage('acceptTerms') }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="checkbox-label">
+          <input
+            type="checkbox"
+            formControlName="marketingEmails"
+            class="checkbox-input"
+          />
+          <span class="checkbox-custom"></span>
+          <span class="checkbox-text">
+            I'd like to receive trading tips and course updates via email
+          </span>
+        </label>
+      </div>
+
+      <!-- Success Message -->
+      <div class="success-message" *ngIf="successMessage">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22,4 12,14.01 9,11.01"></polyline>
+        </svg>
+        {{ successMessage }}
+      </div>
+
+      <!-- Error Message -->
+      <div class="error-message global-error" *ngIf="errorMessage">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="15" y1="9" x2="9" y2="15"></line>
+          <line x1="9" y1="9" x2="15" y2="15"></line>
+        </svg>
+        {{ errorMessage }}
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        class="submit-button"
+        [disabled]="isLoading || registerForm.invalid"
+        [class.loading]="isLoading"
+      >
+        <span *ngIf="!isLoading">Create Account</span>
+        <span *ngIf="isLoading" class="loading-content">
+          <svg class="loading-spinner" width="20" height="20" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="31.416" stroke-dashoffset="31.416">
+              <animate attributeName="stroke-dasharray" dur="2s" values="0 31.416;15.708 15.708;0 31.416" repeatCount="indefinite"/>
+              <animate attributeName="stroke-dashoffset" dur="2s" values="0;-15.708;-31.416" repeatCount="indefinite"/>
+            </circle>
+          </svg>
+          Creating Account...
+        </span>
+      </button>
+    </form>
+
+    <!-- Sign In Link -->
+    <div class="register-footer">
+      <p class="signin-text">
+        Already have an account?
+        <a routerLink="/login" class="signin-link">Sign in</a>
+      </p>
+    </div>
+  </div>
+</div>

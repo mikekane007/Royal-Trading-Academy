@@ -44,14 +44,92 @@
         </ul>
       </div>
 
-      <!-- Auth Buttons -->
+      <!-- Auth Buttons / User Menu -->
       <div class="rta-nav-auth">
-        <a routerLink="/login" class="rta-btn rta-btn-outline rta-btn-sm">
-          Login
-        </a>
-        <a routerLink="/register" class="rta-btn rta-btn-primary rta-btn-sm">
-          Sign Up
-        </a>
+        <!-- Guest User Buttons -->
+        <ng-container *ngIf="!isAuthenticated">
+          <a routerLink="/login" class="rta-btn rta-btn-outline rta-btn-sm">
+            Login
+          </a>
+          <a routerLink="/register" class="rta-btn rta-btn-primary rta-btn-sm">
+            Sign Up
+          </a>
+        </ng-container>
+
+        <!-- Authenticated User Menu -->
+        <div class="user-menu-container" *ngIf="isAuthenticated && currentUser">
+          <button 
+            class="user-menu-trigger" 
+            (click)="toggleUserMenu()"
+            [class.active]="isUserMenuOpen">
+            <div class="user-avatar">
+              <span class="user-initials">{{ getUserInitials() }}</span>
+            </div>
+            <span class="user-name">{{ currentUser.firstName }}</span>
+            <svg class="dropdown-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6,9 12,15 18,9"></polyline>
+            </svg>
+          </button>
+
+          <div class="user-menu-dropdown" [class.open]="isUserMenuOpen">
+            <div class="user-menu-header">
+              <div class="user-info">
+                <p class="user-full-name">{{ currentUser.firstName }} {{ currentUser.lastName }}</p>
+                <p class="user-email">{{ currentUser.email }}</p>
+              </div>
+            </div>
+            <div class="user-menu-divider"></div>
+            <ul class="user-menu-list">
+              <li>
+                <a routerLink="/dashboard" class="user-menu-link" (click)="isUserMenuOpen = false">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                  </svg>
+                  Dashboard
+                </a>
+              </li>
+              <li>
+                <a routerLink="/profile" class="user-menu-link" (click)="isUserMenuOpen = false">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                  Profile
+                </a>
+              </li>
+              <li>
+                <a routerLink="/my-courses" class="user-menu-link" (click)="isUserMenuOpen = false">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                  </svg>
+                  My Courses
+                </a>
+              </li>
+              <li>
+                <a routerLink="/settings" class="user-menu-link" (click)="isUserMenuOpen = false">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1 1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                  </svg>
+                  Settings
+                </a>
+              </li>
+            </ul>
+            <div class="user-menu-divider"></div>
+            <button class="user-menu-logout" (click)="logout()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16,17 21,12 16,7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+              Logout
+            </button>
+          </div>
+        </div>
       </div>
 
       <!-- Mobile Menu Toggle -->
@@ -93,7 +171,8 @@
             Contact
           </a>
         </li>
-        <li class="rta-mobile-nav-item rta-mobile-auth">
+        <!-- Mobile Auth Section -->
+        <li class="rta-mobile-nav-item rta-mobile-auth" *ngIf="!isAuthenticated">
           <a routerLink="/login" class="rta-btn rta-btn-outline rta-btn-block" (click)="closeMobileMenu()">
             Login
           </a>
@@ -101,6 +180,46 @@
             Sign Up
           </a>
         </li>
+
+        <!-- Mobile User Menu -->
+        <ng-container *ngIf="isAuthenticated && currentUser">
+          <li class="rta-mobile-nav-item rta-mobile-user-info">
+            <div class="mobile-user-header">
+              <div class="user-avatar">
+                <span class="user-initials">{{ getUserInitials() }}</span>
+              </div>
+              <div class="user-details">
+                <p class="user-name">{{ currentUser.firstName }} {{ currentUser.lastName }}</p>
+                <p class="user-email">{{ currentUser.email }}</p>
+              </div>
+            </div>
+          </li>
+          <li class="rta-mobile-nav-item">
+            <a routerLink="/dashboard" class="rta-mobile-nav-link" (click)="closeMobileMenu()">
+              Dashboard
+            </a>
+          </li>
+          <li class="rta-mobile-nav-item">
+            <a routerLink="/profile" class="rta-mobile-nav-link" (click)="closeMobileMenu()">
+              Profile
+            </a>
+          </li>
+          <li class="rta-mobile-nav-item">
+            <a routerLink="/my-courses" class="rta-mobile-nav-link" (click)="closeMobileMenu()">
+              My Courses
+            </a>
+          </li>
+          <li class="rta-mobile-nav-item">
+            <a routerLink="/settings" class="rta-mobile-nav-link" (click)="closeMobileMenu()">
+              Settings
+            </a>
+          </li>
+          <li class="rta-mobile-nav-item">
+            <button class="rta-mobile-logout-btn" (click)="logout(); closeMobileMenu()">
+              Logout
+            </button>
+          </li>
+        </ng-container>
       </ul>
     </div>
   </div>
