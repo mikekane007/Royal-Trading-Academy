@@ -1,0 +1,50 @@
+<svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="600" fill="#1e3a8a"/>
+  <rect x="50" y="50" width="700" height="500" fill="#ffffff" rx="8"/>
+  
+  <!-- Chart Grid -->
+  <g stroke="#e5e7eb" stroke-width="1">
+    <line x1="100" y1="100" x2="700" y2="100"/>
+    <line x1="100" y1="200" x2="700" y2="200"/>
+    <line x1="100" y1="300" x2="700" y2="300"/>
+    <line x1="100" y1="400" x2="700" y2="400"/>
+    <line x1="100" y1="500" x2="700" y2="500"/>
+    
+    <line x1="100" y1="100" x2="100" y2="500"/>
+    <line x1="250" y1="100" x2="250" y2="500"/>
+    <line x1="400" y1="100" x2="400" y2="500"/>
+    <line x1="550" y1="100" x2="550" y2="500"/>
+    <line x1="700" y1="100" x2="700" y2="500"/>
+  </g>
+  
+  <!-- Trading Chart Line -->
+  <path d="M100 400 L150 350 L200 380 L250 320 L300 280 L350 300 L400 250 L450 200 L500 180 L550 160 L600 140 L650 120 L700 100" 
+        stroke="#10b981" stroke-width="3" fill="none"/>
+  
+  <!-- Candlesticks -->
+  <g fill="#ef4444">
+    <rect x="120" y="320" width="8" height="60"/>
+    <rect x="170" y="340" width="8" height="40"/>
+    <rect x="220" y="360" width="8" height="30"/>
+    <rect x="270" y="300" width="8" height="50"/>
+  </g>
+  
+  <g fill="#10b981">
+    <rect x="320" y="270" width="8" height="40"/>
+    <rect x="370" y="240" width="8" height="50"/>
+    <rect x="420" y="190" width="8" height="60"/>
+    <rect x="470" y="170" width="8" height="40"/>
+  </g>
+  
+  <!-- Title -->
+  <text x="400" y="40" text-anchor="middle" fill="#1f2937" font-family="Arial, sans-serif" font-size="24" font-weight="bold">
+    Professional Trading Charts
+  </text>
+  
+  <!-- Labels -->
+  <text x="80" y="110" text-anchor="end" fill="#6b7280" font-family="Arial, sans-serif" font-size="12">$50K</text>
+  <text x="80" y="210" text-anchor="end" fill="#6b7280" font-family="Arial, sans-serif" font-size="12">$40K</text>
+  <text x="80" y="310" text-anchor="end" fill="#6b7280" font-family="Arial, sans-serif" font-size="12">$30K</text>
+  <text x="80" y="410" text-anchor="end" fill="#6b7280" font-family="Arial, sans-serif" font-size="12">$20K</text>
+  <text x="80" y="510" text-anchor="end" fill="#6b7280" font-family="Arial, sans-serif" font-size="12">$10K</text>
+</svg>

@@ -1,23 +1,19 @@
 # Course Images
 
-This folder contains images for trading courses:
+This directory contains course thumbnail images and promotional materials for Royal Trading Academy courses.
 
-## Image Categories
+## Required Images:
+- forex-mastery.jpg - Complete Forex Trading Mastery course thumbnail
+- stock-strategies.jpg - Stock Market Investment Strategies course thumbnail
+- crypto-bootcamp.jpg - Cryptocurrency Trading Bootcamp course thumbnail
 
-- **Thumbnails**: Course preview images (16:9 aspect ratio, 400x225px)
-- **Charts**: Trading chart examples and screenshots
-- **Instructors**: Professional headshots of course instructors
-- **Certificates**: Course completion certificate templates
+## Image Specifications:
+- Format: JPG or PNG
+- Aspect ratio: 16:9 recommended
+- Size: 400x225px minimum
+- High quality trading charts or educational graphics
 
-## Naming Convention
-
-- `course-{id}-thumbnail.jpg` - Course thumbnail
-- `course-{id}-preview.jpg` - Course preview image
-- `instructor-{name}.jpg` - Instructor photo
-- `chart-{type}-{id}.jpg` - Trading chart examples
-
-## Trading Course Categories
-
+## Trading Course Categories:
 - Forex Trading
 - Stock Market Analysis
 - Cryptocurrency Trading
@@ -26,3 +22,6 @@ This folder contains images for trading courses:
 - Risk Management
 - Technical Analysis
 - Trading Psychology
+
+## Placeholder:
+Currently using placeholder images. Replace with actual course thumbnails featuring trading charts, market analysis, or educational graphics.

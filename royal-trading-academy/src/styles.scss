@@ -312,6 +312,35 @@ html, body {
   padding: var(--rta-spacing-3xl) 0;
 }
 
+// Icon Styles
+.rta-icon-users::before { content: "👥"; }
+.rta-icon-courses::before { content: "📚"; }
+.rta-icon-success::before { content: "✅"; }
+.rta-icon-profits::before { content: "💰"; }
+.rta-icon-check::before { content: "✓"; }
+
+.rta-star-filled::before { 
+  content: "★"; 
+  color: #fbbf24;
+}
+
+// Additional Color Variables
+:root {
+  --rta-text-primary: var(--rta-gray-900);
+  --rta-text-secondary: var(--rta-gray-600);
+  --rta-background-light: var(--rta-gray-50);
+  --rta-success-light: #f0fdf4;
+  --rta-primary-light: #e8eaf6;
+}
+
+// Button Size Variants
+.rta-btn {
+  &.rta-btn-lg {
+    padding: var(--rta-spacing-md) var(--rta-spacing-xl);
+    font-size: var(--rta-font-size-lg);
+  }
+}
+
 // Responsive Design
 @media (max-width: 768px) {
   .rta-container {

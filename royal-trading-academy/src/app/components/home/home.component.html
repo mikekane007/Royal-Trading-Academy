@@ -1,27 +1,186 @@
 <div class="rta-home">
+  <!-- Hero Section -->
   <section class="rta-hero">
     <div class="rta-container">
       <div class="rta-hero-content">
         <h1 class="rta-heading-1">Master Trading with Royal Trading Academy</h1>
         <p class="rta-body-large">
           Join thousands of successful traders who started their journey with professional education, 
-          expert guidance, and proven strategies.
+          expert guidance, and proven strategies that deliver real results.
         </p>
         <div class="rta-hero-actions">
-          <a href="#" class="rta-btn rta-btn-primary">Start Learning Today</a>
-          <a href="#" class="rta-btn rta-btn-outline">View Courses</a>
+          <a href="/courses" class="rta-btn rta-btn-primary">Start Learning Today</a>
+          <a href="#featured-courses" class="rta-btn rta-btn-outline">View Courses</a>
+        </div>
+      </div>
+      <div class="rta-hero-image">
+        <img src="/assets/images/hero/trading-charts.svg" alt="Professional Trading Charts" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Statistics Section -->
+  <section class="rta-statistics">
+    <div class="rta-container">
+      <div class="rta-stats-grid">
+        <div class="rta-stat-item" *ngFor="let stat of statistics">
+          <div class="rta-stat-icon">
+            <i class="rta-icon-{{ stat.icon }}"></i>
+          </div>
+          <div class="rta-stat-number">{{ stat.number }}</div>
+          <div class="rta-stat-label">{{ stat.label }}</div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="rta-section">
+  <!-- Featured Courses Section -->
+  <section id="featured-courses" class="rta-section rta-featured-courses">
     <div class="rta-container">
-      <h2 class="rta-heading-2">Welcome to Royal Trading Academy</h2>
-      <p class="rta-body">
-        This is a placeholder for the homepage content. The layout components are now properly implemented 
-        with responsive navigation, sticky header, and professional footer.
-      </p>
+      <div class="rta-section-header">
+        <h2 class="rta-heading-2">Featured Trading Courses</h2>
+        <p class="rta-body-large">
+          Master the markets with our comprehensive trading education programs designed by industry experts.
+        </p>
+      </div>
+      
+      <div class="rta-courses-grid">
+        <div class="rta-course-card" *ngFor="let course of featuredCourses">
+          <div class="rta-course-image">
+            <img [src]="course.thumbnailUrl" [alt]="course.title" />
+            <div class="rta-course-category">{{ getCategoryLabel(course.category) }}</div>
+            <div class="rta-course-difficulty">{{ getDifficultyLabel(course.difficulty) }}</div>
+          </div>
+          
+          <div class="rta-course-content">
+            <h3 class="rta-course-title">{{ course.title }}</h3>
+            <p class="rta-course-description">{{ course.shortDescription }}</p>
+            
+            <div class="rta-course-instructor">
+              <img [src]="course.instructor.profileImage" [alt]="course.instructor.name" class="rta-instructor-avatar" />
+              <div class="rta-instructor-info">
+                <div class="rta-instructor-name">{{ course.instructor.name }}</div>
+                <div class="rta-instructor-credentials">{{ course.instructor.yearsExperience }}+ years experience</div>
+              </div>
+            </div>
+            
+            <div class="rta-course-meta">
+              <div class="rta-course-rating">
+                <div class="rta-stars">
+                  <i class="rta-star-filled" *ngFor="let star of generateStars(course.rating)"></i>
+                  <span class="rta-rating-number">{{ course.rating }}</span>
+                </div>
+              </div>
+              <div class="rta-course-duration">{{ course.duration }} hours</div>
+              <div class="rta-course-students">{{ course.enrollmentCount }} students</div>
+            </div>
+            
+            <div class="rta-course-footer">
+              <div class="rta-course-price">
+                <span class="rta-price">${{ course.price }}</span>
+                <span class="rta-currency">{{ course.currency }}</span>
+              </div>
+              <button class="rta-btn rta-btn-primary rta-btn-sm">Enroll Now</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="rta-section-footer">
+        <a href="/courses" class="rta-btn rta-btn-outline">View All Courses</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Royal Trading Academy Section -->
+  <section class="rta-section rta-about">
+    <div class="rta-container">
+      <div class="rta-about-content">
+        <div class="rta-about-text">
+          <h2 class="rta-heading-2">{{ aboutInfo.title }}</h2>
+          <p class="rta-body-large">{{ aboutInfo.description }}</p>
+          
+          <div class="rta-achievements">
+            <h3 class="rta-heading-3">Our Achievements</h3>
+            <ul class="rta-achievement-list">
+              <li *ngFor="let achievement of aboutInfo.achievements">
+                <i class="rta-icon-check"></i>
+                {{ achievement }}
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="rta-founder-card">
+          <div class="rta-founder-image">
+            <img [src]="aboutInfo.founder.image" [alt]="aboutInfo.founder.name" />
+          </div>
+          <div class="rta-founder-info">
+            <h3 class="rta-founder-name">{{ aboutInfo.founder.name }}</h3>
+            <p class="rta-founder-title">{{ aboutInfo.founder.title }}</p>
+            <p class="rta-founder-bio">{{ aboutInfo.founder.bio }}</p>
+            <div class="rta-founder-credentials">
+              <span class="rta-credential" *ngFor="let credential of aboutInfo.founder.credentials">
+                {{ credential }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="rta-section rta-testimonials">
+    <div class="rta-container">
+      <div class="rta-section-header">
+        <h2 class="rta-heading-2">Student Success Stories</h2>
+        <p class="rta-body-large">
+          Hear from our students who have transformed their trading careers and achieved financial success.
+        </p>
+      </div>
+      
+      <div class="rta-testimonials-grid">
+        <div class="rta-testimonial-card" *ngFor="let testimonial of testimonials">
+          <div class="rta-testimonial-content">
+            <div class="rta-testimonial-rating">
+              <i class="rta-star-filled" *ngFor="let star of generateStars(testimonial.rating)"></i>
+            </div>
+            <blockquote class="rta-testimonial-quote">
+              "{{ testimonial.content }}"
+            </blockquote>
+          </div>
+          
+          <div class="rta-testimonial-author">
+            <img [src]="testimonial.image" [alt]="testimonial.name" class="rta-testimonial-avatar" />
+            <div class="rta-testimonial-info">
+              <div class="rta-testimonial-name">{{ testimonial.name }}</div>
+              <div class="rta-testimonial-role">{{ testimonial.role }}</div>
+            </div>
+          </div>
+          
+          <div class="rta-testimonial-results">
+            <div class="rta-profit">{{ testimonial.profit }}</div>
+            <div class="rta-timeframe">in {{ testimonial.timeframe }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action Section -->
+  <section class="rta-cta">
+    <div class="rta-container">
+      <div class="rta-cta-content">
+        <h2 class="rta-heading-2">Ready to Start Your Trading Journey?</h2>
+        <p class="rta-body-large">
+          Join thousands of successful traders who chose Royal Trading Academy for their education.
+        </p>
+        <div class="rta-cta-actions">
+          <a href="/register" class="rta-btn rta-btn-primary rta-btn-lg">Get Started Today</a>
+          <a href="/courses" class="rta-btn rta-btn-outline rta-btn-lg">Browse Courses</a>
+        </div>
+      </div>
     </div>
   </section>
 </div>

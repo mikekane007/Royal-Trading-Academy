@@ -1,0 +1,27 @@
+<svg width="300" height="300" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="150" cy="150" r="150" fill="#1e40af"/>
+  <circle cx="150" cy="150" r="140" fill="#ffffff"/>
+  
+  <!-- Professional Executive Avatar -->
+  <circle cx="150" cy="120" r="40" fill="#e5e7eb"/>
+  <path d="M150 160 C125 160 100 175 100 195 L100 220 L200 220 L200 195 C200 175 175 160 150 160 Z" fill="#e5e7eb"/>
+  
+  <!-- Executive Suit with Tie -->
+  <rect x="130" y="175" width="40" height="50" fill="#1f2937" rx="3"/>
+  <rect x="145" y="180" width="10" height="45" fill="#ffffff"/>
+  <rect x="147" y="180" width="6" height="45" fill="#dc2626"/>
+  
+  <!-- Crown Symbol (Royal) -->
+  <path d="M135 100 L150 85 L165 100 L160 110 L140 110 Z" fill="#fbbf24" stroke="#f59e0b" stroke-width="2"/>
+  <circle cx="135" cy="105" r="3" fill="#f59e0b"/>
+  <circle cx="150" cy="90" r="3" fill="#f59e0b"/>
+  <circle cx="165" cy="105" r="3" fill="#f59e0b"/>
+  
+  <!-- Text -->
+  <text x="150" y="260" text-anchor="middle" fill="#1f2937" font-family="Arial, sans-serif" font-size="18" font-weight="bold">
+    JONATHAN ROYAL
+  </text>
+  <text x="150" y="280" text-anchor="middle" fill="#6b7280" font-family="Arial, sans-serif" font-size="14">
+    FOUNDER &amp; CTO
+  </text>
+</svg>
