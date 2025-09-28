@@ -5,11 +5,16 @@
 /tmp
 /out-tsc
 /bazel-out
+royal-trading-academy/dist/
+royal-trading-academy/.angular/
 
 # Node
 /node_modules
+royal-trading-academy/node_modules/
 npm-debug.log
 yarn-error.log
+package-lock.json
+yarn.lock
 
 # IDEs and editors
 .idea/
@@ -21,7 +26,7 @@ yarn-error.log
 *.sublime-workspace
 
 # Visual Studio Code
-./.vscode/*
+.vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
@@ -30,9 +35,11 @@ yarn-error.log
 
 # Miscellaneous
 /.angular/cache
+royal-trading-academy/.angular/cache
 .sass-cache/
 /connect.lock
 /coverage
+royal-trading-academy/coverage/
 /libpeerconnection.log
 testem.log
 /typings
@@ -41,5 +48,25 @@ testem.log
 .DS_Store
 Thumbs.db
 
-././kiro
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+royal-trading-academy/.env*
+
+# Logs
+*.log
+logs/
+royal-trading-academy/*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Kiro IDE (correct path)
+.kiro/
 
