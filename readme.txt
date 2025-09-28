@@ -1,1 +1,0 @@
-A landing page for Royal Trading Academy

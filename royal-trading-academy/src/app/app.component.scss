@@ -1,0 +1,34 @@
+.rta-app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.rta-header {
+  background: linear-gradient(135deg, var(--rta-primary) 0%, var(--rta-primary-dark) 100%);
+  color: white;
+  padding: var(--rta-spacing-xl) 0;
+  text-align: center;
+  
+  h1 {
+    margin: 0 0 var(--rta-spacing-sm) 0;
+    color: white;
+  }
+  
+  p {
+    margin: 0;
+    opacity: 0.9;
+  }
+}
+
+.rta-main {
+  flex: 1;
+  padding: var(--rta-spacing-2xl) 0;
+}
+
+.rta-footer {
+  background-color: var(--rta-gray-100);
+  padding: var(--rta-spacing-lg) 0;
+  text-align: center;
+  margin-top: auto;
+}
