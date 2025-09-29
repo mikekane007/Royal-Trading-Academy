@@ -1,46 +1,195 @@
 <div class="dashboard-container">
-  <div class="dashboard-header">
-    <h1 class="dashboard-title">Welcome to Your Dashboard</h1>
-    <div class="user-info" *ngIf="currentUser">
-      <p class="welcome-message">Hello, {{ currentUser.firstName }} {{ currentUser.lastName }}!</p>
-      <p class="user-details">
-        <span class="user-email">{{ currentUser.email }}</span>
-        <span class="user-role" [class]="'role-' + currentUser.role.toLowerCase()">{{ currentUser.role }}</span>
-      </p>
-    </div>
+  <!-- Loading State -->
+  <div class="loading-state" *ngIf="isLoading">
+    <div class="loading-spinner"></div>
+    <p>Loading your dashboard...</p>
   </div>
 
-  <div class="dashboard-content">
-    <div class="dashboard-card">
-      <h2>Authentication System Test</h2>
-      <p>This is a protected route that requires authentication.</p>
-      <p *ngIf="currentUser">You are successfully logged in as: <strong>{{ currentUser.email }}</strong></p>
+  <!-- Error State -->
+  <div class="error-state" *ngIf="error && !isLoading">
+    <div class="error-icon">⚠️</div>
+    <h3>Something went wrong</h3>
+    <p>{{ error }}</p>
+    <button class="retry-btn" (click)="retryLoad()">Try Again</button>
+  </div>
+
+  <!-- Dashboard Content -->
+  <div class="dashboard-content" *ngIf="!isLoading && !error && currentUser && dashboardData">
+    <!-- Header Section -->
+    <div class="dashboard-header">
+      <div class="welcome-section">
+        <h1 class="dashboard-title">Welcome back, {{ currentUser.firstName }}!</h1>
+        <p class="dashboard-subtitle">Continue your trading education journey</p>
+      </div>
       
-      <div class="user-details-card" *ngIf="currentUser">
-        <h3>User Information</h3>
-        <ul>
-          <li><strong>ID:</strong> {{ currentUser.id }}</li>
-          <li><strong>Name:</strong> {{ currentUser.firstName }} {{ currentUser.lastName }}</li>
-          <li><strong>Email:</strong> {{ currentUser.email }}</li>
-          <li><strong>Role:</strong> {{ currentUser.role }}</li>
-          <li><strong>Subscription:</strong> {{ currentUser.subscriptionStatus }}</li>
-          <li><strong>Verified:</strong> {{ currentUser.isVerified ? 'Yes' : 'No' }}</li>
-          <li><strong>Member Since:</strong> {{ currentUser.createdAt | date:'medium' }}</li>
-        </ul>
+      <div class="user-profile">
+        <div class="profile-avatar">
+          <img 
+            [src]="dashboardData.user.profileImage || '/assets/images/profile-placeholder.svg'" 
+            [alt]="currentUser.firstName + ' ' + currentUser.lastName"
+            (error)="onImageError($event)"
+          />
+        </div>
+        <div class="profile-info">
+          <h3>{{ currentUser.firstName }} {{ currentUser.lastName }}</h3>
+          <span class="user-role" [class]="'role-' + currentUser.role.toLowerCase()">
+            {{ currentUser.role }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Overview -->
+    <div class="stats-overview">
+      <div class="stat-card">
+        <div class="stat-icon">📚</div>
+        <div class="stat-content">
+          <h3>{{ dashboardData.overallProgress.totalCourses }}</h3>
+          <p>Enrolled Courses</p>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-content">
+          <h3>{{ dashboardData.overallProgress.completedCourses }}</h3>
+          <p>Completed</p>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">⏱️</div>
+        <div class="stat-content">
+          <h3>{{ dashboardData.overallProgress.completedHours }}h</h3>
+          <p>Learning Time</p>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">🎯</div>
+        <div class="stat-content">
+          <app-progress-circle 
+            [progress]="(dashboardData.overallProgress.completedCourses / dashboardData.overallProgress.totalCourses) * 100"
+            [size]="50"
+            [strokeWidth]="4"
+            color="#48bb78"
+          />
+          <p>Overall Progress</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Dashboard Grid -->
+    <div class="dashboard-grid">
+      <!-- Left Column -->
+      <div class="left-column">
+        <!-- Continue Learning Section -->
+        <section class="continue-learning" *ngIf="nextLessons.length > 0">
+          <h2 class="section-title">Continue Learning</h2>
+          <div class="next-lessons">
+            <div 
+              class="next-lesson-card" 
+              *ngFor="let course of nextLessons"
+              [routerLink]="['/courses', course.course.id]"
+            >
+              <div class="lesson-thumbnail">
+                <img 
+                  [src]="course.course.thumbnailUrl" 
+                  [alt]="course.course.title"
+                  (error)="onImageError($event)"
+                />
+              </div>
+              <div class="lesson-info">
+                <h4>{{ course.enrollment.nextLesson?.title }}</h4>
+                <p class="course-title">{{ course.course.title }}</p>
+                <div class="progress-bar">
+                  <div 
+                    class="progress-fill" 
+                    [style.width.%]="course.enrollment.progress"
+                  ></div>
+                </div>
+              </div>
+              <div class="continue-icon">▶️</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- My Courses Section -->
+        <section class="my-courses">
+          <div class="section-header">
+            <h2 class="section-title">My Courses</h2>
+            <a routerLink="/courses" class="view-all-link">View All</a>
+          </div>
+          
+          <!-- Course Tabs -->
+          <div class="course-tabs">
+            <button 
+              class="tab-btn" 
+              [class.active]="selectedTab === 'in-progress'"
+              (click)="selectedTab = 'in-progress'"
+            >
+              In Progress ({{ inProgressCourses.length }})
+            </button>
+            <button 
+              class="tab-btn" 
+              [class.active]="selectedTab === 'completed'"
+              (click)="selectedTab = 'completed'"
+            >
+              Completed ({{ completedCourses.length }})
+            </button>
+            <button 
+              class="tab-btn" 
+              [class.active]="selectedTab === 'not-started'"
+              (click)="selectedTab = 'not-started'"
+            >
+              Not Started ({{ notStartedCourses.length }})
+            </button>
+          </div>
+
+          <!-- Course Grid -->
+          <div class="courses-grid">
+            <app-course-card 
+              *ngFor="let course of getCoursesForTab(); trackBy: trackByCourseId"
+              [enrolledCourse]="course"
+            />
+          </div>
+
+          <div class="empty-state" *ngIf="getCoursesForTab().length === 0">
+            <div class="empty-icon">📚</div>
+            <h3>No courses in this category</h3>
+            <p *ngIf="selectedTab === 'in-progress'">Start learning to see courses here!</p>
+            <p *ngIf="selectedTab === 'completed'">Complete courses to see them here!</p>
+            <p *ngIf="selectedTab === 'not-started'">All your courses are in progress!</p>
+            <a routerLink="/courses" class="browse-courses-btn">Browse Courses</a>
+          </div>
+        </section>
       </div>
 
-      <div class="dashboard-actions">
-        <button 
-          class="logout-button" 
-          (click)="logout()"
-          [disabled]="isLoading"
-        >
-          <span *ngIf="!isLoading">Logout</span>
-          <span *ngIf="isLoading">Logging out...</span>
-        </button>
+      <!-- Right Column -->
+      <div class="right-column">
+        <!-- Recent Activity -->
+        <app-activity-feed [activities]="dashboardData.recentActivity" />
         
-        <a routerLink="/" class="home-link">Back to Home</a>
+        <!-- Achievements -->
+        <app-achievements [achievements]="dashboardData.achievements" />
       </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <a routerLink="/courses" class="action-btn primary">
+        <span class="btn-icon">🔍</span>
+        Browse Courses
+      </a>
+      <a routerLink="/profile" class="action-btn secondary">
+        <span class="btn-icon">👤</span>
+        Edit Profile
+      </a>
+      <button (click)="logout()" class="action-btn danger" [disabled]="isLoading">
+        <span class="btn-icon">🚪</span>
+        <span *ngIf="!isLoading">Logout</span>
+        <span *ngIf="isLoading">Logging out...</span>
+      </button>
     </div>
   </div>
 </div>

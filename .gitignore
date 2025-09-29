@@ -67,6 +67,9 @@ pids
 *.seed
 *.pid.lock
 
-# Kiro IDE (correct path)
+# Kiro IDE files and folders
 .kiro/
+.kiro/*
+**/.kiro/
+**/.kiro/*
 
