@@ -33,7 +33,7 @@
   - Include placeholder images for trading charts, academy photos, and instructor images
   - _Requirements: 1.1, 1.2, 1.3_
 
-- [ ] 5. Create Royal Trading Academy course catalog and detail pages
+- [x] 5. Create Royal Trading Academy course catalog and detail pages
   - Build CourseCatalogComponent with trading course categories (Forex, Stocks, Crypto, etc.)
   - Implement CourseCardComponent with trading course styling: chart images, course titles, pricing
   - Create CourseDetailComponent for individual trading courses with detailed curriculum
