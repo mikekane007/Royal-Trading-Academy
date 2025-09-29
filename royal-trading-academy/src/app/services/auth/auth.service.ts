@@ -182,6 +182,16 @@ export class AuthService {
   }
 
   /**
+   * Update current user data
+   */
+  updateCurrentUser(user: User): void {
+    if (this.isBrowser()) {
+      localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+    }
+    this.currentUserSubject.next(user);
+  }
+
+  /**
    * Set authentication data
    */
   private setAuthData(authResponse: AuthResponse): void {

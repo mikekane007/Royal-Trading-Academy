@@ -1,0 +1,372 @@
+<div class="profile-container">
+  <div class="profile-header">
+    <h1>My Profile</h1>
+    <p>Manage your account settings and preferences</p>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Loading profile...</p>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="error" class="alert alert-error">
+    <i class="icon-error"></i>
+    <span>{{ error }}</span>
+    <button type="button" class="close-btn" (click)="clearMessages()">×</button>
+  </div>
+
+  <!-- Success Message -->
+  <div *ngIf="successMessage" class="alert alert-success">
+    <i class="icon-success"></i>
+    <span>{{ successMessage }}</span>
+    <button type="button" class="close-btn" (click)="clearMessages()">×</button>
+  </div>
+
+  <div *ngIf="user && !loading" class="profile-content">
+    
+    <!-- Profile Image Section -->
+    <div class="profile-image-section">
+      <div class="image-container">
+        <img 
+          [src]="profileImagePreview || user.profileImage || '/assets/images/profile-placeholder.svg'" 
+          [alt]="user.firstName + ' ' + user.lastName"
+          class="profile-image"
+        />
+        <div class="image-overlay">
+          <label for="profile-image-input" class="upload-btn">
+            <i class="icon-camera"></i>
+            Change Photo
+          </label>
+          <input 
+            id="profile-image-input" 
+            type="file" 
+            accept="image/*" 
+            (change)="onFileSelected($event)"
+            style="display: none;"
+          />
+        </div>
+      </div>
+      
+      <div *ngIf="profileImageFile" class="image-actions">
+        <button 
+          type="button" 
+          class="btn btn-primary" 
+          (click)="onUploadImage()"
+          [disabled]="isUploadingImage"
+        >
+          <span *ngIf="isUploadingImage">Uploading...</span>
+          <span *ngIf="!isUploadingImage">Upload Image</span>
+        </button>
+        <button 
+          type="button" 
+          class="btn btn-secondary" 
+          (click)="onCancelImageUpload()"
+          [disabled]="isUploadingImage"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+
+    <!-- Account Status Section -->
+    <div class="account-status-section">
+      <h2>Account Status</h2>
+      <div class="status-grid">
+        <div class="status-item">
+          <label>Email Verification</label>
+          <div class="status-value">
+            <span *ngIf="user.isVerified" class="status-verified">
+              <i class="icon-check"></i> Verified
+            </span>
+            <span *ngIf="!user.isVerified" class="status-unverified">
+              <i class="icon-warning"></i> Not Verified
+              <button 
+                type="button" 
+                class="btn btn-link" 
+                (click)="onResendVerificationEmail()"
+                [disabled]="loading"
+              >
+                Resend Email
+              </button>
+            </span>
+          </div>
+        </div>
+        
+        <div class="status-item">
+          <label>Subscription Status</label>
+          <div class="status-value">
+            <span [class]="'subscription-status ' + getSubscriptionStatusClass()">
+              {{ subscriptionStatusLabels[user.subscriptionStatus] }}
+            </span>
+            <a routerLink="/subscription" class="btn btn-link">Manage</a>
+          </div>
+        </div>
+        
+        <div class="status-item">
+          <label>Member Since</label>
+          <div class="status-value">
+            {{ user.createdAt | date:'mediumDate' }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile Information Section -->
+    <div class="profile-info-section">
+      <div class="section-header">
+        <h2>Profile Information</h2>
+        <button 
+          *ngIf="!isEditingProfile" 
+          type="button" 
+          class="btn btn-outline" 
+          (click)="onEditProfile()"
+        >
+          <i class="icon-edit"></i> Edit Profile
+        </button>
+      </div>
+
+      <form [formGroup]="profileForm" (ngSubmit)="onSaveProfile()" class="profile-form">
+        
+        <!-- Basic Information -->
+        <div class="form-section">
+          <h3>Basic Information</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="firstName">First Name *</label>
+              <input 
+                id="firstName"
+                type="text" 
+                formControlName="firstName"
+                [readonly]="!isEditingProfile"
+                [class.error]="getFieldError('profile', 'firstName')"
+              />
+              <div *ngIf="getFieldError('profile', 'firstName')" class="field-error">
+                {{ getFieldError('profile', 'firstName') }}
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="lastName">Last Name *</label>
+              <input 
+                id="lastName"
+                type="text" 
+                formControlName="lastName"
+                [readonly]="!isEditingProfile"
+                [class.error]="getFieldError('profile', 'lastName')"
+              />
+              <div *ngIf="getFieldError('profile', 'lastName')" class="field-error">
+                {{ getFieldError('profile', 'lastName') }}
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="email">Email Address *</label>
+            <input 
+              id="email"
+              type="email" 
+              formControlName="email"
+              [readonly]="!isEditingProfile"
+              [class.error]="getFieldError('profile', 'email')"
+            />
+            <div *ngIf="getFieldError('profile', 'email')" class="field-error">
+              {{ getFieldError('profile', 'email') }}
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="bio">Bio</label>
+            <textarea 
+              id="bio"
+              formControlName="bio"
+              [readonly]="!isEditingProfile"
+              rows="4"
+              placeholder="Tell us about yourself and your trading journey..."
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- Contact Information -->
+        <div class="form-section">
+          <h3>Contact Information</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <input 
+                id="phone"
+                type="tel" 
+                formControlName="phone"
+                [readonly]="!isEditingProfile"
+                placeholder="+1 (555) 123-4567"
+              />
+            </div>
+            
+            <div class="form-group">
+              <label for="country">Country</label>
+              <input 
+                id="country"
+                type="text" 
+                formControlName="country"
+                [readonly]="!isEditingProfile"
+                placeholder="United States"
+              />
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="timezone">Timezone</label>
+            <input 
+              id="timezone"
+              type="text" 
+              formControlName="timezone"
+              [readonly]="!isEditingProfile"
+              placeholder="America/New_York"
+            />
+          </div>
+        </div>
+
+        <!-- Trading Information -->
+        <div class="form-section">
+          <h3>Trading Information</h3>
+          <div class="form-group">
+            <label for="tradingExperience">Trading Experience</label>
+            <select 
+              id="tradingExperience"
+              formControlName="tradingExperience"
+              [disabled]="!isEditingProfile"
+            >
+              <option value="">Select your experience level</option>
+              <option *ngFor="let experience of tradingExperienceOptions" [value]="experience">
+                {{ experience | titlecase }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div *ngIf="isEditingProfile" class="form-actions">
+          <button 
+            type="submit" 
+            class="btn btn-primary"
+            [disabled]="profileForm.invalid || loading"
+          >
+            <span *ngIf="loading">Saving...</span>
+            <span *ngIf="!loading">Save Changes</span>
+          </button>
+          <button 
+            type="button" 
+            class="btn btn-secondary" 
+            (click)="onCancelEdit()"
+            [disabled]="loading"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Password Change Section -->
+    <div class="password-section">
+      <div class="section-header">
+        <h2>Password & Security</h2>
+        <button 
+          *ngIf="!isChangingPassword" 
+          type="button" 
+          class="btn btn-outline" 
+          (click)="onChangePassword()"
+        >
+          <i class="icon-lock"></i> Change Password
+        </button>
+      </div>
+
+      <form 
+        *ngIf="isChangingPassword" 
+        [formGroup]="passwordForm" 
+        (ngSubmit)="onSavePassword()" 
+        class="password-form"
+      >
+        <div class="form-group">
+          <label for="currentPassword">Current Password *</label>
+          <input 
+            id="currentPassword"
+            type="password" 
+            formControlName="currentPassword"
+            [class.error]="getFieldError('password', 'currentPassword')"
+          />
+          <div *ngIf="getFieldError('password', 'currentPassword')" class="field-error">
+            {{ getFieldError('password', 'currentPassword') }}
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="newPassword">New Password *</label>
+          <input 
+            id="newPassword"
+            type="password" 
+            formControlName="newPassword"
+            [class.error]="getFieldError('password', 'newPassword')"
+          />
+          <div *ngIf="getFieldError('password', 'newPassword')" class="field-error">
+            {{ getFieldError('password', 'newPassword') }}
+          </div>
+          <small class="field-hint">Password must be at least 8 characters long</small>
+        </div>
+        
+        <div class="form-group">
+          <label for="confirmPassword">Confirm New Password *</label>
+          <input 
+            id="confirmPassword"
+            type="password" 
+            formControlName="confirmPassword"
+            [class.error]="getFieldError('password', 'confirmPassword')"
+          />
+          <div *ngIf="getFieldError('password', 'confirmPassword')" class="field-error">
+            {{ getFieldError('password', 'confirmPassword') }}
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button 
+            type="submit" 
+            class="btn btn-primary"
+            [disabled]="passwordForm.invalid || loading"
+          >
+            <span *ngIf="loading">Changing Password...</span>
+            <span *ngIf="!loading">Change Password</span>
+          </button>
+          <button 
+            type="button" 
+            class="btn btn-secondary" 
+            (click)="onCancelPasswordChange()"
+            [disabled]="loading"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Danger Zone -->
+    <div class="danger-zone-section">
+      <div class="section-header">
+        <h2>Danger Zone</h2>
+        <p>Irreversible and destructive actions</p>
+      </div>
+
+      <div class="danger-actions">
+        <div class="danger-item">
+          <div class="danger-info">
+            <h3>Delete Account</h3>
+            <p>Permanently delete your account and all associated data. This action cannot be undone.</p>
+          </div>
+          <a routerLink="/delete-account" class="btn btn-danger">
+            Delete Account
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
