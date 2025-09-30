@@ -11,8 +11,12 @@
 }
 
 .moderation-header {
-  text-align: center;
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
   margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
 
   h1 {
     color: #1e293b;
@@ -42,13 +46,13 @@
   .stat-card {
     background: white;
     border-radius: 12px;
-    padding: 2rem;
+    padding: 1.5rem;
     text-align: center;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
     .stat-number {
       display: block;
-      font-size: 3rem;
+      font-size: 2.5rem;
       font-weight: 700;
       color: #dc2626;
       margin-bottom: 0.5rem;
@@ -56,10 +60,10 @@
 
     .stat-label {
       color: #64748b;
-      font-size: 1rem;
-      font-weight: 500;
+      font-size: 0.875rem;
       text-transform: uppercase;
       letter-spacing: 0.05em;
+      font-weight: 500;
     }
   }
 }
@@ -68,25 +72,30 @@
   display: flex;
   gap: 0.5rem;
   margin-bottom: 2rem;
-  border-bottom: 2px solid #e2e8f0;
+  background: white;
+  border-radius: 12px;
+  padding: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
   .tab-btn {
+    flex: 1;
     padding: 1rem 1.5rem;
-    background: none;
+    background: transparent;
     border: none;
+    border-radius: 8px;
     color: #64748b;
-    font-weight: 600;
+    font-weight: 500;
     cursor: pointer;
-    border-bottom: 3px solid transparent;
     transition: all 0.2s;
 
     &:hover {
-      color: #2563eb;
+      background: #f1f5f9;
+      color: #1e293b;
     }
 
     &.active {
-      color: #2563eb;
-      border-bottom-color: #2563eb;
+      background: #2563eb;
+      color: white;
     }
   }
 }
@@ -96,7 +105,7 @@
     .flagged-item {
       background: white;
       border-radius: 12px;
-      padding: 2rem;
+      padding: 1.5rem;
       margin-bottom: 1.5rem;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       border-left: 4px solid #dc2626;
@@ -111,6 +120,7 @@
 
         .item-info {
           flex: 1;
+          min-width: 0;
 
           .item-title {
             color: #1e293b;
@@ -129,14 +139,12 @@
 
           .item-meta {
             display: flex;
+            flex-wrap: wrap;
             gap: 1rem;
             color: #64748b;
             font-size: 0.875rem;
-            flex-wrap: wrap;
 
             .author {
-              font-weight: 500;
-
               .instructor-badge {
                 background: #10b981;
                 color: white;
@@ -184,8 +192,8 @@
           gap: 0.5rem;
 
           .tag {
-            background: #fee2e2;
-            color: #991b1b;
+            background: #f1f5f9;
+            color: #475569;
             padding: 0.25rem 0.75rem;
             border-radius: 20px;
             font-size: 0.875rem;
@@ -195,21 +203,19 @@
       }
 
       .moderation-actions {
-        border-top: 1px solid #e2e8f0;
-        padding-top: 1.5rem;
-
         .action-group {
           display: flex;
-          gap: 1rem;
+          gap: 0.75rem;
           flex-wrap: wrap;
 
           .mod-btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
-            border: 1px solid;
 
             &:disabled {
               opacity: 0.6;
@@ -217,32 +223,29 @@
             }
 
             &.approve-btn {
-              background: #d1fae5;
-              color: #065f46;
-              border-color: #10b981;
+              background: #10b981;
+              color: white;
 
               &:hover:not(:disabled) {
-                background: #a7f3d0;
+                background: #059669;
               }
             }
 
             &.reject-btn {
-              background: #fee2e2;
-              color: #991b1b;
-              border-color: #dc2626;
+              background: #dc2626;
+              color: white;
 
               &:hover:not(:disabled) {
-                background: #fecaca;
+                background: #b91c1c;
               }
             }
 
             &.flag-btn {
-              background: #fef3c7;
-              color: #92400e;
-              border-color: #f59e0b;
+              background: #f59e0b;
+              color: white;
 
               &:hover:not(:disabled) {
-                background: #fde68a;
+                background: #d97706;
               }
             }
           }
@@ -266,37 +269,36 @@
     h3 {
       color: #1e293b;
       font-size: 1.5rem;
+      font-weight: 600;
       margin-bottom: 0.5rem;
     }
 
     p {
       color: #64748b;
-      max-width: 400px;
-      margin: 0 auto;
       line-height: 1.6;
     }
   }
-}
 
-.loading-state {
-  text-align: center;
-  padding: 4rem 2rem;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  .loading-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 
-  .loading-spinner {
-    width: 40px;
-    height: 40px;
-    border: 4px solid #f3f4f6;
-    border-top: 4px solid #2563eb;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin: 0 auto 1rem;
-  }
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #f3f4f6;
+      border-top: 4px solid #2563eb;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
 
-  p {
-    color: #64748b;
+    p {
+      color: #64748b;
+    }
   }
 }
 
@@ -356,8 +358,8 @@
 
       p {
         color: #374151;
-        margin-bottom: 1.5rem;
         line-height: 1.6;
+        margin-bottom: 1rem;
       }
 
       .form-group {
@@ -374,16 +376,12 @@
           border: 2px solid #e2e8f0;
           border-radius: 8px;
           font-size: 1rem;
-          transition: border-color 0.2s;
           resize: vertical;
+          transition: border-color 0.2s;
 
           &:focus {
             outline: none;
             border-color: #2563eb;
-          }
-
-          &::placeholder {
-            color: #9ca3af;
           }
         }
       }
@@ -402,12 +400,11 @@
         font-weight: 600;
         cursor: pointer;
         transition: all 0.2s;
-        border: 1px solid;
 
         &.btn-secondary {
           background: #f1f5f9;
           color: #64748b;
-          border-color: #e2e8f0;
+          border: 1px solid #e2e8f0;
 
           &:hover {
             background: #e2e8f0;
@@ -417,7 +414,7 @@
         &.btn-primary {
           background: #2563eb;
           color: white;
-          border-color: #2563eb;
+          border: 1px solid #2563eb;
 
           &:hover:not(:disabled) {
             background: #1d4ed8;
@@ -427,7 +424,7 @@
         &.btn-danger {
           background: #dc2626;
           color: white;
-          border-color: #dc2626;
+          border: 1px solid #dc2626;
 
           &:hover:not(:disabled) {
             background: #b91c1c;
@@ -437,7 +434,7 @@
         &.btn-warning {
           background: #f59e0b;
           color: white;
-          border-color: #f59e0b;
+          border: 1px solid #f59e0b;
 
           &:hover:not(:disabled) {
             background: #d97706;
@@ -470,6 +467,7 @@
   h2 {
     color: #1e293b;
     font-size: 1.5rem;
+    font-weight: 600;
     margin-bottom: 0.5rem;
   }
 
@@ -501,6 +499,14 @@
 
 // Responsive adjustments
 @media (max-width: 768px) {
+  .content-tabs {
+    flex-direction: column;
+
+    .tab-btn {
+      text-align: center;
+    }
+  }
+
   .flagged-item {
     .item-header {
       flex-direction: column;
@@ -508,20 +514,20 @@
     }
 
     .moderation-actions .action-group {
-      flex-direction: column;
-
-      .mod-btn {
-        width: 100%;
-        text-align: center;
-      }
+      justify-content: center;
     }
   }
 
-  .modal-actions {
-    flex-direction: column;
+  .modal-content {
+    margin: 1rem;
+    max-width: none;
 
-    .btn {
-      width: 100%;
+    .modal-actions {
+      flex-direction: column;
+
+      .btn {
+        width: 100%;
+      }
     }
   }
 }

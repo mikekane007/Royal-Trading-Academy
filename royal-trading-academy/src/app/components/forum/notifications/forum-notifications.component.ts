@@ -10,72 +10,7 @@ import { ForumNotification, NotificationType } from '../../../models/forum/forum
   selector: 'app-forum-notifications',
   standalone: true,
   imports: [CommonModule],
-  template: `
-    <div class="notifications-container">
-      <div class="notifications-header">
-        <h2>Forum Notifications</h2>
-        <div class="header-actions">
-          <span class="unread-count" *ngIf="unreadCount > 0">
-            {{ unreadCount }} unread
-          </span>
-          <button 
-            class="mark-all-read-btn"
-            (click)="markAllAsRead()"
-            [disabled]="unreadCount === 0">
-            Mark All Read
-          </button>
-        </div>
-      </div>
-
-      <div class="notifications-list" *ngIf="notifications.length > 0">
-        <div 
-          class="notification-item"
-          *ngFor="let notification of notifications; trackBy: trackNotification"
-          [class.unread]="!notification.isRead"
-          (click)="handleNotificationClick(notification)">
-          
-          <div class="notification-icon">
-            <span [ngSwitch]="notification.type">
-              <span *ngSwitchCase="'NEW_REPLY'">💬</span>
-              <span *ngSwitchCase="'INSTRUCTOR_RESPONSE'">👨‍🏫</span>
-              <span *ngSwitchCase="'BEST_ANSWER_SELECTED'">⭐</span>
-              <span *ngSwitchCase="'THREAD_RESOLVED'">✅</span>
-              <span *ngSwitchCase="'THREAD_PINNED'">📌</span>
-              <span *ngSwitchCase="'CONTENT_MODERATED'">🛡️</span>
-              <span *ngSwitchDefault>🔔</span>
-            </span>
-          </div>
-
-          <div class="notification-content">
-            <h4 class="notification-title">{{ notification.title }}</h4>
-            <p class="notification-message">{{ notification.message }}</p>
-            <span class="notification-time">{{ notification.createdAt | date:'MMM d, y \'at\' h:mm a' }}</span>
-          </div>
-
-          <div class="notification-actions">
-            <button 
-              class="mark-read-btn"
-              *ngIf="!notification.isRead"
-              (click)="markAsRead(notification.id, $event)"
-              title="Mark as read">
-              ✓
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="empty-state" *ngIf="notifications.length === 0 && !isLoading">
-        <div class="empty-icon">🔔</div>
-        <h3>No notifications yet</h3>
-        <p>You'll see notifications here when there's activity in the forum discussions you're following.</p>
-      </div>
-
-      <div class="loading-state" *ngIf="isLoading">
-        <div class="loading-spinner"></div>
-        <p>Loading notifications...</p>
-      </div>
-    </div>
-  `,
+  templateUrl: './forum-notifications.component.html',
   styleUrls: ['./forum-notifications.component.scss']
 })
 export class ForumNotificationsComponent implements OnInit, OnDestroy {

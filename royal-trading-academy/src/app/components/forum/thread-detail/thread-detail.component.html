@@ -1,0 +1,239 @@
+<div class="thread-detail-container" *ngIf="thread">
+  <!-- Thread Header -->
+  <div class="thread-header">
+    <div class="breadcrumb">
+      <button class="back-btn" (click)="goBack()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="m15 18-6-6 6-6"/>
+        </svg>
+        Back to Forum
+      </button>
+    </div>
+
+    <div class="thread-main">
+      <div class="thread-status-bar">
+        <div class="status-indicators">
+          <span class="pin-indicator" *ngIf="thread.isPinned" title="Pinned">📌 Pinned</span>
+          <span class="lock-indicator" *ngIf="thread.isLocked" title="Locked">🔒 Locked</span>
+          <span class="resolved-indicator" *ngIf="thread.isResolved" title="Resolved">✅ Resolved</span>
+        </div>
+        
+        <div class="thread-actions" *ngIf="canModerate">
+          <button class="action-btn" (click)="togglePin()" [disabled]="isUpdating">
+            {{ thread.isPinned ? 'Unpin' : 'Pin' }}
+          </button>
+          <button class="action-btn" (click)="toggleLock()" [disabled]="isUpdating">
+            {{ thread.isLocked ? 'Unlock' : 'Lock' }}
+          </button>
+          <button class="action-btn" (click)="toggleResolved()" [disabled]="isUpdating">
+            {{ thread.isResolved ? 'Mark Unresolved' : 'Mark Resolved' }}
+          </button>
+        </div>
+      </div>
+
+      <h1 class="thread-title">{{ thread.title }}</h1>
+      
+      <div class="thread-meta">
+        <div class="author-info">
+          <img 
+            [src]="thread.author.profileImage || '/assets/images/profile-placeholder.svg'" 
+            [alt]="thread.author.firstName + ' ' + thread.author.lastName"
+            class="author-avatar">
+          <div class="author-details">
+            <span class="author-name">
+              {{ thread.author.firstName }} {{ thread.author.lastName }}
+              <span class="instructor-badge" *ngIf="thread.author.isInstructor">Instructor</span>
+            </span>
+            <span class="post-date">{{ thread.createdAt | date:'MMM d, y \'at\' h:mm a' }}</span>
+          </div>
+        </div>
+        
+        <div class="thread-stats">
+          <span class="reply-count">{{ thread.replyCount }} replies</span>
+          <span class="view-count">{{ thread.upvotes }} votes</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Thread Content -->
+  <div class="thread-content">
+    <div class="content-body">
+      <div class="vote-section">
+        <button 
+          class="vote-btn upvote"
+          [class.active]="userVote === 'upvote'"
+          (click)="vote('upvote')"
+          [disabled]="!currentUser">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m18 15-6-6-6 6"/>
+          </svg>
+        </button>
+        <span class="vote-count">{{ thread.upvotes - thread.downvotes }}</span>
+        <button 
+          class="vote-btn downvote"
+          [class.active]="userVote === 'downvote'"
+          (click)="vote('downvote')"
+          [disabled]="!currentUser">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m6 9 6 6 6-6"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="content-text">
+        <div class="thread-body" [innerHTML]="formatContent(thread.content)"></div>
+        
+        <div class="thread-tags" *ngIf="thread.tags.length > 0">
+          <span class="tag" *ngFor="let tag of thread.tags">{{ tag }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Replies Section -->
+  <div class="replies-section">
+    <div class="replies-header">
+      <h2>{{ thread.replyCount }} {{ thread.replyCount === 1 ? 'Reply' : 'Replies' }}</h2>
+      <div class="sort-options">
+        <select [(ngModel)]="sortBy" (change)="sortReplies()" class="sort-select">
+          <option value="oldest">Oldest First</option>
+          <option value="newest">Newest First</option>
+          <option value="votes">Most Votes</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Reply Form -->
+    <div class="reply-form-section" *ngIf="currentUser && !thread.isLocked">
+      <form [formGroup]="replyForm" (ngSubmit)="submitReply()" class="reply-form">
+        <div class="form-header">
+          <img 
+            [src]="currentUser.profileImage || '/assets/images/profile-placeholder.svg'" 
+            [alt]="currentUser.firstName + ' ' + currentUser.lastName"
+            class="user-avatar">
+          <span class="user-name">{{ currentUser.firstName }} {{ currentUser.lastName }}</span>
+        </div>
+        
+        <div class="form-body">
+          <textarea 
+            formControlName="content"
+            placeholder="Share your thoughts or ask a follow-up question..."
+            rows="4"
+            class="reply-textarea"></textarea>
+          
+          <div class="form-actions">
+            <button 
+              type="submit" 
+              class="btn btn-primary"
+              [disabled]="replyForm.invalid || isSubmittingReply">
+              {{ isSubmittingReply ? 'Posting...' : 'Post Reply' }}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Locked Thread Message -->
+    <div class="locked-message" *ngIf="thread.isLocked">
+      <div class="lock-icon">🔒</div>
+      <p>This discussion has been locked and no longer accepts new replies.</p>
+    </div>
+
+    <!-- Login Prompt -->
+    <div class="login-prompt" *ngIf="!currentUser">
+      <p>Please <a routerLink="/login">log in</a> to participate in the discussion.</p>
+    </div>
+
+    <!-- Replies List -->
+    <div class="replies-list" *ngIf="replies.length > 0">
+      <div 
+        class="reply-item"
+        *ngFor="let reply of sortedReplies; trackBy: trackReply"
+        [class.instructor-reply]="reply.isInstructorResponse"
+        [class.best-answer]="reply.isBestAnswer">
+        
+        <div class="reply-header">
+          <div class="author-info">
+            <img 
+              [src]="reply.author.profileImage || '/assets/images/profile-placeholder.svg'" 
+              [alt]="reply.author.firstName + ' ' + reply.author.lastName"
+              class="author-avatar">
+            <div class="author-details">
+              <span class="author-name">
+                {{ reply.author.firstName }} {{ reply.author.lastName }}
+                <span class="instructor-badge" *ngIf="reply.author.isInstructor">Instructor</span>
+                <span class="best-answer-badge" *ngIf="reply.isBestAnswer">Best Answer</span>
+              </span>
+              <span class="post-date">{{ reply.createdAt | date:'MMM d, y \'at\' h:mm a' }}</span>
+            </div>
+          </div>
+          
+          <div class="reply-actions" *ngIf="canModerateReply(reply)">
+            <button 
+              class="action-btn"
+              *ngIf="!reply.isBestAnswer && !thread.isResolved"
+              (click)="markBestAnswer(reply.id)">
+              Mark as Best Answer
+            </button>
+          </div>
+        </div>
+
+        <div class="reply-content">
+          <div class="vote-section">
+            <button 
+              class="vote-btn upvote"
+              [class.active]="getUserVoteForReply(reply.id) === 'upvote'"
+              (click)="voteOnReply(reply.id, 'upvote')"
+              [disabled]="!currentUser">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="m18 15-6-6-6 6"/>
+              </svg>
+            </button>
+            <span class="vote-count">{{ reply.upvotes - reply.downvotes }}</span>
+            <button 
+              class="vote-btn downvote"
+              [class.active]="getUserVoteForReply(reply.id) === 'downvote'"
+              (click)="voteOnReply(reply.id, 'downvote')"
+              [disabled]="!currentUser">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="m6 9 6 6 6-6"/>
+              </svg>
+            </button>
+          </div>
+
+          <div class="content-text">
+            <div class="reply-body" [innerHTML]="formatContent(reply.content)"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- No Replies State -->
+    <div class="no-replies" *ngIf="replies.length === 0 && !isLoadingReplies">
+      <div class="empty-icon">💬</div>
+      <h3>No replies yet</h3>
+      <p>Be the first to share your thoughts on this discussion.</p>
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading-state" *ngIf="isLoadingReplies">
+      <div class="loading-spinner"></div>
+      <p>Loading replies...</p>
+    </div>
+  </div>
+</div>
+
+<!-- Loading Thread State -->
+<div class="loading-thread" *ngIf="!thread && isLoadingThread">
+  <div class="loading-spinner"></div>
+  <p>Loading discussion...</p>
+</div>
+
+<!-- Thread Not Found -->
+<div class="thread-not-found" *ngIf="!thread && !isLoadingThread">
+  <div class="error-icon">❌</div>
+  <h2>Discussion Not Found</h2>
+  <p>The discussion you're looking for doesn't exist or has been removed.</p>
+  <button class="btn btn-primary" (click)="goBack()">Back to Forum</button>
+</div>

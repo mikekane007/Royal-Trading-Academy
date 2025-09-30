@@ -1,0 +1,227 @@
+<div class="moderation-container" *ngIf="canModerate">
+  <div class="moderation-header">
+    <h1>Forum Moderation</h1>
+    <p class="header-description">
+      Review and moderate flagged content to maintain community standards.
+    </p>
+  </div>
+
+  <!-- Moderation Stats -->
+  <div class="moderation-stats">
+    <div class="stat-card">
+      <div class="stat-number">{{ flaggedThreads.length }}</div>
+      <div class="stat-label">Flagged Threads</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">{{ flaggedReplies.length }}</div>
+      <div class="stat-label">Flagged Replies</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">{{ totalFlagged }}</div>
+      <div class="stat-label">Total Pending</div>
+    </div>
+  </div>
+
+  <!-- Content Tabs -->
+  <div class="content-tabs">
+    <button 
+      class="tab-btn"
+      [class.active]="activeTab === 'threads'"
+      (click)="setActiveTab('threads')">
+      Flagged Threads ({{ flaggedThreads.length }})
+    </button>
+    <button 
+      class="tab-btn"
+      [class.active]="activeTab === 'replies'"
+      (click)="setActiveTab('replies')">
+      Flagged Replies ({{ flaggedReplies.length }})
+    </button>
+  </div>
+
+  <!-- Flagged Threads -->
+  <div class="content-section" *ngIf="activeTab === 'threads'">
+    <div class="flagged-items" *ngIf="flaggedThreads.length > 0">
+      <div 
+        class="flagged-item thread-item"
+        *ngFor="let thread of flaggedThreads">
+        
+        <div class="item-header">
+          <div class="item-info">
+            <h3 class="item-title">{{ thread.title }}</h3>
+            <div class="item-meta">
+              <span class="author">
+                By {{ thread.author.firstName }} {{ thread.author.lastName }}
+                <span class="instructor-badge" *ngIf="thread.author.isInstructor">Instructor</span>
+              </span>
+              <span class="date">{{ thread.createdAt | date:'MMM d, y h:mm a' }}</span>
+              <span class="votes">{{ thread.upvotes - thread.downvotes }} votes</span>
+            </div>
+          </div>
+          
+          <div class="item-actions">
+            <button 
+              class="action-btn view-btn"
+              (click)="viewThread(thread.id)">
+              View Thread
+            </button>
+          </div>
+        </div>
+
+        <div class="item-content">
+          <p class="content-preview">{{ thread.content | slice:0:300 }}{{ thread.content.length > 300 ? '...' : '' }}</p>
+          
+          <div class="content-tags" *ngIf="thread.tags.length > 0">
+            <span class="tag" *ngFor="let tag of thread.tags">{{ tag }}</span>
+          </div>
+        </div>
+
+        <div class="moderation-actions">
+          <div class="action-group">
+            <button 
+              class="mod-btn approve-btn"
+              (click)="moderateContent(thread.id, 'thread', 'approve')"
+              [disabled]="isProcessing">
+              ✓ Approve
+            </button>
+            <button 
+              class="mod-btn reject-btn"
+              (click)="showRejectModal(thread.id, 'thread')"
+              [disabled]="isProcessing">
+              ✗ Reject
+            </button>
+            <button 
+              class="mod-btn flag-btn"
+              (click)="showFlagModal(thread.id, 'thread')"
+              [disabled]="isProcessing">
+              🚩 Flag for Review
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="flaggedThreads.length === 0 && !isLoading">
+      <div class="empty-icon">✅</div>
+      <h3>No flagged threads</h3>
+      <p>All threads are currently approved or no content has been flagged for review.</p>
+    </div>
+  </div>
+
+  <!-- Flagged Replies -->
+  <div class="content-section" *ngIf="activeTab === 'replies'">
+    <div class="flagged-items" *ngIf="flaggedReplies.length > 0">
+      <div 
+        class="flagged-item reply-item"
+        *ngFor="let reply of flaggedReplies">
+        
+        <div class="item-header">
+          <div class="item-info">
+            <h4 class="reply-context">Reply in discussion</h4>
+            <div class="item-meta">
+              <span class="author">
+                By {{ reply.author.firstName }} {{ reply.author.lastName }}
+                <span class="instructor-badge" *ngIf="reply.author.isInstructor">Instructor</span>
+              </span>
+              <span class="date">{{ reply.createdAt | date:'MMM d, y h:mm a' }}</span>
+              <span class="votes">{{ reply.upvotes - reply.downvotes }} votes</span>
+            </div>
+          </div>
+          
+          <div class="item-actions">
+            <button 
+              class="action-btn view-btn"
+              (click)="viewReply(reply.threadId, reply.id)">
+              View Reply
+            </button>
+          </div>
+        </div>
+
+        <div class="item-content">
+          <p class="content-preview">{{ reply.content | slice:0:300 }}{{ reply.content.length > 300 ? '...' : '' }}</p>
+        </div>
+
+        <div class="moderation-actions">
+          <div class="action-group">
+            <button 
+              class="mod-btn approve-btn"
+              (click)="moderateContent(reply.id, 'reply', 'approve')"
+              [disabled]="isProcessing">
+              ✓ Approve
+            </button>
+            <button 
+              class="mod-btn reject-btn"
+              (click)="showRejectModal(reply.id, 'reply')"
+              [disabled]="isProcessing">
+              ✗ Reject
+            </button>
+            <button 
+              class="mod-btn flag-btn"
+              (click)="showFlagModal(reply.id, 'reply')"
+              [disabled]="isProcessing">
+              🚩 Flag for Review
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="flaggedReplies.length === 0 && !isLoading">
+      <div class="empty-icon">✅</div>
+      <h3>No flagged replies</h3>
+      <p>All replies are currently approved or no content has been flagged for review.</p>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-state" *ngIf="isLoading">
+    <div class="loading-spinner"></div>
+    <p>Loading flagged content...</p>
+  </div>
+
+  <!-- Moderation Modal -->
+  <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ modalTitle }}</h3>
+        <button class="close-btn" (click)="closeModal()">×</button>
+      </div>
+      
+      <div class="modal-body">
+        <p>{{ modalMessage }}</p>
+        
+        <div class="form-group" *ngIf="modalAction === 'reject' || modalAction === 'flag'">
+          <label for="reason">Reason (optional)</label>
+          <textarea 
+            id="reason"
+            [(ngModel)]="moderationReason"
+            placeholder="Provide a reason for this action..."
+            rows="3"
+            class="form-control"></textarea>
+        </div>
+      </div>
+      
+      <div class="modal-actions">
+        <button class="btn btn-secondary" (click)="closeModal()">
+          Cancel
+        </button>
+        <button 
+          class="btn"
+          [class.btn-danger]="modalAction === 'reject'"
+          [class.btn-warning]="modalAction === 'flag'"
+          [class.btn-primary]="modalAction === 'approve'"
+          (click)="confirmModeration()"
+          [disabled]="isProcessing">
+          {{ isProcessing ? 'Processing...' : modalConfirmText }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Access Denied -->
+<div class="access-denied" *ngIf="!canModerate && !isLoading">
+  <div class="error-icon">🚫</div>
+  <h2>Access Denied</h2>
+  <p>You don't have permission to access the moderation panel.</p>
+  <button class="btn btn-primary" (click)="goBack()">Go Back</button>
+</div>
