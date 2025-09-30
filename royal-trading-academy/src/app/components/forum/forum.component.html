@@ -1,0 +1,248 @@
+<div class="forum-container">
+  <!-- Forum Header -->
+  <div class="forum-header">
+    <div class="header-content">
+      <h1>Course Discussion Forum</h1>
+      <p class="forum-description">
+        Connect with fellow students and instructors. Ask questions, share insights, and learn together.
+      </p>
+    </div>
+    
+    <!-- Forum Stats -->
+    <div class="forum-stats" *ngIf="forumStats">
+      <div class="stat-item">
+        <span class="stat-number">{{ forumStats.totalThreads }}</span>
+        <span class="stat-label">Discussions</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">{{ forumStats.totalReplies }}</span>
+        <span class="stat-label">Replies</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">{{ forumStats.activeUsers }}</span>
+        <span class="stat-label">Active Users</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">{{ forumStats.resolvedThreads }}</span>
+        <span class="stat-label">Resolved</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Forum Controls -->
+  <div class="forum-controls">
+    <div class="search-section">
+      <div class="search-box">
+        <input 
+          type="text" 
+          placeholder="Search discussions..." 
+          [(ngModel)]="searchQuery"
+          (input)="onSearchInput($event)"
+          class="search-input">
+        <button class="search-btn" (click)="performSearch()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="action-section">
+      <button 
+        class="btn btn-primary new-thread-btn" 
+        (click)="showCreateThread = true"
+        *ngIf="currentUser">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        New Discussion
+      </button>
+    </div>
+  </div>
+
+  <!-- Create Thread Modal -->
+  <div class="modal-overlay" *ngIf="showCreateThread" (click)="closeCreateThread()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Start New Discussion</h3>
+        <button class="close-btn" (click)="closeCreateThread()">×</button>
+      </div>
+      
+      <form [formGroup]="createThreadForm" (ngSubmit)="createThread()" class="create-thread-form">
+        <div class="form-group">
+          <label for="title">Discussion Title</label>
+          <input 
+            type="text" 
+            id="title"
+            formControlName="title"
+            placeholder="What would you like to discuss?"
+            class="form-control">
+          <div class="error-message" *ngIf="createThreadForm.get('title')?.invalid && createThreadForm.get('title')?.touched">
+            Please enter a title for your discussion
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="content">Your Question or Topic</label>
+          <textarea 
+            id="content"
+            formControlName="content"
+            placeholder="Provide details about your question or topic..."
+            rows="6"
+            class="form-control"></textarea>
+          <div class="error-message" *ngIf="createThreadForm.get('content')?.invalid && createThreadForm.get('content')?.touched">
+            Please provide content for your discussion
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="tags">Tags (optional)</label>
+          <input 
+            type="text" 
+            id="tags"
+            formControlName="tags"
+            placeholder="e.g., forex, risk-management, technical-analysis"
+            class="form-control">
+          <small class="form-help">Separate tags with commas</small>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" (click)="closeCreateThread()">
+            Cancel
+          </button>
+          <button 
+            type="submit" 
+            class="btn btn-primary"
+            [disabled]="createThreadForm.invalid || isCreatingThread">
+            {{ isCreatingThread ? 'Creating...' : 'Create Discussion' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Thread List -->
+  <div class="thread-list">
+    <div class="thread-filters">
+      <button 
+        class="filter-btn"
+        [class.active]="currentFilter === 'all'"
+        (click)="setFilter('all')">
+        All Discussions
+      </button>
+      <button 
+        class="filter-btn"
+        [class.active]="currentFilter === 'pinned'"
+        (click)="setFilter('pinned')">
+        Pinned
+      </button>
+      <button 
+        class="filter-btn"
+        [class.active]="currentFilter === 'resolved'"
+        (click)="setFilter('resolved')">
+        Resolved
+      </button>
+      <button 
+        class="filter-btn"
+        [class.active]="currentFilter === 'unresolved'"
+        (click)="setFilter('unresolved')">
+        Unresolved
+      </button>
+    </div>
+
+    <div class="threads" *ngIf="!isLoading; else loadingTemplate">
+      <div 
+        class="thread-item"
+        *ngFor="let thread of filteredThreads"
+        [class.pinned]="thread.isPinned"
+        [class.resolved]="thread.isResolved"
+        (click)="openThread(thread.id)">
+        
+        <div class="thread-status">
+          <div class="status-indicators">
+            <span class="pin-indicator" *ngIf="thread.isPinned" title="Pinned">📌</span>
+            <span class="lock-indicator" *ngIf="thread.isLocked" title="Locked">🔒</span>
+            <span class="resolved-indicator" *ngIf="thread.isResolved" title="Resolved">✅</span>
+          </div>
+          
+          <div class="vote-score">
+            <span class="upvotes">{{ thread.upvotes }}</span>
+            <span class="vote-label">votes</span>
+          </div>
+        </div>
+
+        <div class="thread-content">
+          <h3 class="thread-title">{{ thread.title }}</h3>
+          <p class="thread-preview">{{ thread.content | slice:0:150 }}{{ thread.content.length > 150 ? '...' : '' }}</p>
+          
+          <div class="thread-tags" *ngIf="thread.tags.length > 0">
+            <span class="tag" *ngFor="let tag of thread.tags">{{ tag }}</span>
+          </div>
+          
+          <div class="thread-meta">
+            <div class="author-info">
+              <img 
+                [src]="thread.author.profileImage || '/assets/images/profile-placeholder.svg'" 
+                [alt]="thread.author.firstName + ' ' + thread.author.lastName"
+                class="author-avatar">
+              <span class="author-name">
+                {{ thread.author.firstName }} {{ thread.author.lastName }}
+                <span class="instructor-badge" *ngIf="thread.author.isInstructor">Instructor</span>
+              </span>
+            </div>
+            
+            <div class="thread-stats">
+              <span class="reply-count">{{ thread.replyCount }} replies</span>
+              <span class="created-date">{{ thread.createdAt | date:'MMM d, y' }}</span>
+              <span class="last-activity" *ngIf="thread.lastReplyAt">
+                Last reply {{ thread.lastReplyAt | date:'MMM d, y' }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="empty-state" *ngIf="filteredThreads.length === 0">
+        <div class="empty-icon">💬</div>
+        <h3>No discussions found</h3>
+        <p>{{ getEmptyStateMessage() }}</p>
+        <button 
+          class="btn btn-primary" 
+          (click)="showCreateThread = true"
+          *ngIf="currentUser && currentFilter === 'all'">
+          Start the first discussion
+        </button>
+      </div>
+    </div>
+
+    <ng-template #loadingTemplate>
+      <div class="loading-state">
+        <div class="loading-spinner"></div>
+        <p>Loading discussions...</p>
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination" *ngIf="totalPages > 1">
+    <button 
+      class="page-btn"
+      [disabled]="currentPage === 1"
+      (click)="goToPage(currentPage - 1)">
+      Previous
+    </button>
+    
+    <span class="page-info">
+      Page {{ currentPage }} of {{ totalPages }}
+    </span>
+    
+    <button 
+      class="page-btn"
+      [disabled]="currentPage === totalPages"
+      (click)="goToPage(currentPage + 1)">
+      Next
+    </button>
+  </div>
+</div>

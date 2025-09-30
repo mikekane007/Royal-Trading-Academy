@@ -41,5 +41,26 @@ export const routes: Routes = [
     loadComponent: () => import('./components/profile/account-deletion/account-deletion.component').then(m => m.AccountDeletionComponent),
     canActivate: [authGuard]
   },
+  // Forum routes
+  { 
+    path: 'forum', 
+    loadComponent: () => import('./components/forum/forum.component').then(m => m.ForumComponent),
+    canActivate: [authGuard]
+  },
+  { 
+    path: 'forum/thread/:id', 
+    loadComponent: () => import('./components/forum/thread-detail/thread-detail.component').then(m => m.ThreadDetailComponent),
+    canActivate: [authGuard]
+  },
+  { 
+    path: 'forum/notifications', 
+    loadComponent: () => import('./components/forum/notifications/forum-notifications.component').then(m => m.ForumNotificationsComponent),
+    canActivate: [authGuard]
+  },
+  { 
+    path: 'forum/moderation', 
+    loadComponent: () => import('./components/forum/moderation/forum-moderation.component').then(m => m.ForumModerationComponent),
+    canActivate: [authGuard]
+  },
   { path: '**', redirectTo: '' }
 ];

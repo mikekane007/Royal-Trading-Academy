@@ -31,6 +31,11 @@
               Courses
             </a>
           </li>
+          <li class="rta-nav-item" *ngIf="isAuthenticated">
+            <a routerLink="/forum" routerLinkActive="active" class="rta-nav-link">
+              Forum
+            </a>
+          </li>
           <li class="rta-nav-item">
             <a routerLink="/about" routerLinkActive="active" class="rta-nav-link">
               About
@@ -110,6 +115,14 @@
                 </a>
               </li>
               <li>
+                <a routerLink="/forum" class="user-menu-link" (click)="isUserMenuOpen = false">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                  </svg>
+                  Forum
+                </a>
+              </li>
+              <li>
                 <a routerLink="/settings" class="user-menu-link" (click)="isUserMenuOpen = false">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="12" cy="12" r="3"></circle>
@@ -157,6 +170,12 @@
           <a routerLink="/courses" routerLinkActive="active" 
              class="rta-mobile-nav-link" (click)="closeMobileMenu()">
             Courses
+          </a>
+        </li>
+        <li class="rta-mobile-nav-item" *ngIf="isAuthenticated">
+          <a routerLink="/forum" routerLinkActive="active" 
+             class="rta-mobile-nav-link" (click)="closeMobileMenu()">
+            Forum
           </a>
         </li>
         <li class="rta-mobile-nav-item">
@@ -207,6 +226,11 @@
           <li class="rta-mobile-nav-item">
             <a routerLink="/my-courses" class="rta-mobile-nav-link" (click)="closeMobileMenu()">
               My Courses
+            </a>
+          </li>
+          <li class="rta-mobile-nav-item">
+            <a routerLink="/forum" class="rta-mobile-nav-link" (click)="closeMobileMenu()">
+              Forum
             </a>
           </li>
           <li class="rta-mobile-nav-item">
