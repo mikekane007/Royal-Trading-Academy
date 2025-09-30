@@ -47,10 +47,10 @@ export class NotificationService {
     });
   }
 
-  showInfo(message: string, duration: number = 5000): void {
+  showInfo(message: string, title?: string, duration: number = 5000): void {
     this.addNotification({
       type: 'info',
-      message,
+      message: title ? `${title}: ${message}` : message,
       duration
     });
   }

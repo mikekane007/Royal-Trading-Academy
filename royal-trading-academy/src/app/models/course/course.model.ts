@@ -6,9 +6,11 @@ export interface Course {
   price: number;
   currency: string;
   difficulty: Difficulty;
+  level: string; // Added for compatibility
   duration: number; // in hours
   instructor: CourseInstructor;
   thumbnailUrl: string;
+  imageUrl: string; // Added for compatibility
   previewVideoUrl?: string;
   category: CourseCategory;
   tags: string[];
@@ -18,6 +20,7 @@ export interface Course {
   enrollmentCount: number;
   rating: number;
   lessons: Lesson[];
+  totalLessons: number; // Added for compatibility
 }
 
 export interface CourseInstructor {

@@ -1,21 +1,19 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './components/home/home.component';
-import { LoginComponent } from './components/auth/login/login.component';
-import { RegisterComponent } from './components/auth/register/register.component';
-import { NotFoundComponent } from './components/error/not-found/not-found.component';
-import { ErrorPageComponent } from './components/error/error-page/error-page.component';
 import { authGuard, guestGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
-  { path: '', component: HomeComponent },
+  { 
+    path: '', 
+    loadComponent: () => import('./components/home/home.component').then(m => m.HomeComponent)
+  },
   { 
     path: 'login', 
-    component: LoginComponent,
+    loadComponent: () => import('./components/auth/login/login.component').then(m => m.LoginComponent),
     canActivate: [guestGuard]
   },
   { 
     path: 'register', 
-    component: RegisterComponent,
+    loadComponent: () => import('./components/auth/register/register.component').then(m => m.RegisterComponent),
     canActivate: [guestGuard]
   },
   { 
@@ -64,14 +62,31 @@ export const routes: Routes = [
     loadComponent: () => import('./components/forum/moderation/forum-moderation.component').then(m => m.ForumModerationComponent),
     canActivate: [authGuard]
   },
+  // Course routes
+  { 
+    path: 'courses', 
+    loadComponent: () => import('./components/courses/course-catalog/course-catalog.component').then(m => m.CourseCatalogComponent)
+  },
+  { 
+    path: 'courses/:id', 
+    loadComponent: () => import('./components/courses/course-detail/course-detail.component').then(m => m.CourseDetailComponent)
+  },
+  { 
+    path: 'courses/:id/lesson/:lessonId', 
+    loadComponent: () => import('./components/courses/lesson-viewer/lesson-viewer.component').then(m => m.LessonViewerComponent),
+    canActivate: [authGuard]
+  },
   // Error pages
   { 
     path: 'error', 
-    component: ErrorPageComponent
+    loadComponent: () => import('./components/error/error-page/error-page.component').then(m => m.ErrorPageComponent)
   },
   { 
     path: '404', 
-    component: NotFoundComponent
+    loadComponent: () => import('./components/error/not-found/not-found.component').then(m => m.NotFoundComponent)
   },
-  { path: '**', component: NotFoundComponent }
+  { 
+    path: '**', 
+    loadComponent: () => import('./components/error/not-found/not-found.component').then(m => m.NotFoundComponent)
+  }
 ];

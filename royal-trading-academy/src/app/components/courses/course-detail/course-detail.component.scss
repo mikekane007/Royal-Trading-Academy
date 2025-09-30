@@ -1,0 +1,138 @@
+.course-detail {
+  padding: 2rem 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.course-header {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.course-info h1 {
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+.description {
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.course-meta {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.course-meta span {
+  background: var(--background-secondary);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+}
+
+.price {
+  margin-bottom: 1rem;
+}
+
+.amount {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+.enroll-btn {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 4px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.enroll-btn:hover {
+  background: var(--primary-dark);
+}
+
+.course-image img {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.course-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+}
+
+.curriculum h2,
+.instructor-info h2 {
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+.lesson-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.lesson-number {
+  background: var(--primary-color);
+  color: white;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.lesson-title {
+  flex: 1;
+}
+
+.lesson-duration {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.instructor {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.instructor img {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+}
+
+.error {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+  .course-header,
+  .course-content {
+    grid-template-columns: 1fr;
+  }
+}

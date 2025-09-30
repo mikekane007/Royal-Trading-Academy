@@ -1,0 +1,54 @@
+<div class="course-detail" *ngIf="!loading && course">
+  <div class="container">
+    <div class="course-header">
+      <div class="course-info">
+        <h1>{{ course.title }}</h1>
+        <p class="description">{{ course.description }}</p>
+        <div class="course-meta">
+          <span class="level">{{ course.level | titlecase }}</span>
+          <span class="duration">{{ course.duration }} hours</span>
+          <span class="category">{{ course.category | titlecase }}</span>
+        </div>
+        <div class="price">
+          <span class="amount">${{ course.price }}</span>
+        </div>
+        <button class="enroll-btn" (click)="enrollInCourse()">
+          Enroll Now
+        </button>
+      </div>
+      <div class="course-image">
+        <img [src]="course.imageUrl" [alt]="course.title" loading="lazy">
+      </div>
+    </div>
+    
+    <div class="course-content">
+      <div class="curriculum">
+        <h2>Course Curriculum</h2>
+        <div class="lessons">
+          <div *ngFor="let lesson of course.lessons; let i = index" class="lesson-item">
+            <span class="lesson-number">{{ i + 1 }}</span>
+            <span class="lesson-title">{{ lesson.title }}</span>
+            <span class="lesson-duration">{{ lesson.duration }} min</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="instructor-info">
+        <h2>Your Instructor</h2>
+        <div class="instructor">
+          <img [src]="course.instructor?.profileImage" [alt]="course.instructor?.name" loading="lazy">
+          <div>
+            <h3>{{ course.instructor.name }}</h3>
+            <p>{{ course.instructor.bio }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-loading-spinner *ngIf="loading"></app-loading-spinner>
+
+<div *ngIf="!loading && !course" class="error">
+  <p>Course not found.</p>
+</div>

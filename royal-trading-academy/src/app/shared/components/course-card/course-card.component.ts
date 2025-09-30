@@ -3,19 +3,24 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { EnrolledCourse } from '../../../models/enrollment/enrollment.model';
 import { ProgressCircleComponent } from '../progress-circle/progress-circle.component';
+import { OptimizedImageComponent } from '../optimized-image/optimized-image.component';
 
 @Component({
   selector: 'app-course-card',
   standalone: true,
-  imports: [CommonModule, RouterModule, ProgressCircleComponent],
+  imports: [CommonModule, RouterModule, ProgressCircleComponent, OptimizedImageComponent],
   template: `
     <div class="course-card" [class.completed]="enrolledCourse.enrollment.progress === 100">
       <div class="course-thumbnail">
-        <img 
-          [src]="enrolledCourse.course.thumbnailUrl" 
+        <app-optimized-image
+          [src]="enrolledCourse.course.thumbnailUrl"
           [alt]="enrolledCourse.course.title"
-          (error)="onImageError($event)"
-        />
+          [placeholder]="'/assets/images/course-placeholder.svg'"
+          [errorImage]="'/assets/images/course-placeholder.svg'"
+          width="100%"
+          height="160px"
+          [quality]="75"
+        ></app-optimized-image>
         <div class="progress-overlay">
           <app-progress-circle 
             [progress]="enrolledCourse.enrollment.progress"

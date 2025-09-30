@@ -20,7 +20,9 @@ export class HomeComponent {
       price: 299,
       currency: 'USD',
       difficulty: Difficulty.BEGINNER,
+      level: 'beginner',
       duration: 40,
+      totalLessons: 32,
       instructor: {
         id: 'inst1',
         name: 'Michael Sterling',
@@ -30,6 +32,7 @@ export class HomeComponent {
         yearsExperience: 15
       },
       thumbnailUrl: '/assets/images/courses/forex-mastery.svg',
+      imageUrl: '/assets/images/courses/forex-mastery.svg',
       previewVideoUrl: '/assets/videos/forex-preview.mp4',
       category: CourseCategory.FOREX,
       tags: ['forex', 'currency', 'technical-analysis', 'risk-management'],
@@ -48,6 +51,8 @@ export class HomeComponent {
       price: 249,
       currency: 'USD',
       difficulty: Difficulty.INTERMEDIATE,
+      level: 'intermediate',
+      totalLessons: 28,
       duration: 35,
       instructor: {
         id: 'inst2',
@@ -58,6 +63,7 @@ export class HomeComponent {
         yearsExperience: 12
       },
       thumbnailUrl: '/assets/images/courses/stock-strategies.svg',
+      imageUrl: '/assets/images/courses/stock-strategies.svg',
       category: CourseCategory.STOCKS,
       tags: ['stocks', 'investing', 'portfolio', 'fundamental-analysis'],
       isPublished: true,
@@ -75,7 +81,9 @@ export class HomeComponent {
       price: 199,
       currency: 'USD',
       difficulty: Difficulty.ADVANCED,
+      level: 'advanced',
       duration: 25,
+      totalLessons: 22,
       instructor: {
         id: 'inst3',
         name: 'Alex Rodriguez',
@@ -85,6 +93,7 @@ export class HomeComponent {
         yearsExperience: 7
       },
       thumbnailUrl: '/assets/images/courses/crypto-bootcamp.svg',
+      imageUrl: '/assets/images/courses/crypto-bootcamp.svg',
       category: CourseCategory.CRYPTOCURRENCY,
       tags: ['cryptocurrency', 'bitcoin', 'defi', 'blockchain'],
       isPublished: true,

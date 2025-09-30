@@ -558,3 +558,105 @@ $breakpoints: (
     scroll-behavior: auto !important;
   }
 }
+
+// Performance optimizations
+* {
+  // Enable hardware acceleration for transforms
+  will-change: auto;
+}
+
+// Optimize images for performance
+img {
+  // Enable native lazy loading
+  loading: lazy;
+  
+  // Optimize image rendering
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  
+  // Prevent layout shift
+  height: auto;
+  max-width: 100%;
+}
+
+// Optimize fonts for performance
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap; // Improve font loading performance
+  src: local('Roboto Light'), local('Roboto-Light'),
+       url('https://fonts.gstatic.com/s/roboto/v30/KFOlCnqEu92Fr1MmSU5fBBc4.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Roboto'), local('Roboto-Regular'),
+       url('https://fonts.gstatic.com/s/roboto/v30/KFOmCnqEu92Fr1Mu4mxK.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: local('Roboto Medium'), local('Roboto-Medium'),
+       url('https://fonts.gstatic.com/s/roboto/v30/KFOlCnqEu92Fr1MmEU9fBBc4.woff2') format('woff2');
+}
+
+// Critical CSS for above-the-fold content
+.critical-content {
+  // Inline critical styles to prevent render blocking
+  font-family: system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+  color: #212121;
+}
+
+// Optimize animations for performance
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+// Use transform instead of changing layout properties
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.4s ease-out;
+}
+
+// Optimize scrolling performance
+.smooth-scroll {
+  scroll-behavior: smooth;
+}
+
+// Container queries for better responsive design (when supported)
+@supports (container-type: inline-size) {
+  .responsive-container {
+    container-type: inline-size;
+  }
+  
+  @container (min-width: 768px) {
+    .responsive-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+  }
+}

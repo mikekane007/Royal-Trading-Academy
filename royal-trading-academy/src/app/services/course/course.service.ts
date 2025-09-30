@@ -110,6 +110,34 @@ export class CourseService {
     return of({ message: 'Progress updated' });
   }
 
+  // Get lesson by ID
+  getLesson(courseId: string, lessonId: string): Observable<any> {
+    // For now, return mock lesson data. In production, this would be:
+    // return this.http.get(`${this.apiUrl}/courses/${courseId}/lessons/${lessonId}`);
+    return of({
+      id: lessonId,
+      courseId: courseId,
+      title: 'Sample Lesson',
+      description: 'This is a sample lesson description',
+      videoUrl: 'https://example.com/video.mp4',
+      duration: 1800, // 30 minutes
+      resources: [
+        {
+          id: '1',
+          title: 'Lesson Notes',
+          url: 'https://example.com/notes.pdf'
+        }
+      ]
+    });
+  }
+
+  // Mark lesson as completed
+  markLessonCompleted(lessonId: string): Observable<any> {
+    // For now, return mock success. In production, this would be:
+    // return this.http.post(`${this.apiUrl}/lessons/${lessonId}/complete`, {});
+    return of({ message: 'Lesson marked as completed' });
+  }
+
   // Rate a course
   rateCourse(courseId: string, rating: number, review?: string): Observable<any> {
     // For now, return mock success. In production, this would be:
@@ -166,6 +194,9 @@ export class CourseService {
           yearsExperience: 15
         },
         thumbnailUrl: '/assets/images/courses/forex-mastery.svg',
+        imageUrl: '/assets/images/courses/forex-mastery.svg',
+        level: 'intermediate',
+        totalLessons: 24,
         previewVideoUrl: 'https://example.com/preview1.mp4',
         category: CourseCategory.FOREX,
         tags: ['forex', 'currency', 'trading'],
@@ -194,6 +225,9 @@ export class CourseService {
           yearsExperience: 12
         },
         thumbnailUrl: '/assets/images/courses/stock-strategies.svg',
+        imageUrl: '/assets/images/courses/stock-strategies.svg',
+        level: 'advanced',
+        totalLessons: 20,
         category: CourseCategory.STOCKS,
         tags: ['stocks', 'equity', 'analysis'],
         isPublished: true,
@@ -221,6 +255,9 @@ export class CourseService {
           yearsExperience: 8
         },
         thumbnailUrl: '/assets/images/courses/crypto-bootcamp.svg',
+        imageUrl: '/assets/images/courses/crypto-bootcamp.svg',
+        level: 'beginner',
+        totalLessons: 18,
         category: CourseCategory.CRYPTOCURRENCY,
         tags: ['crypto', 'bitcoin', 'blockchain'],
         isPublished: true,
