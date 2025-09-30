@@ -4,11 +4,15 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { AuthService, LoginRequest } from '../../../services/auth/auth.service';
+import { LoadingService } from '../../../services/loading/loading.service';
+import { FormValidationService } from '../../../services/validation/form-validation.service';
+import { FormFieldComponent } from '../../../shared/components/form-field/form-field.component';
+import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, FormFieldComponent, LoadingSpinnerComponent],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
@@ -25,7 +29,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private loadingService: LoadingService,
+    public validationService: FormValidationService
   ) {
     this.loginForm = this.createLoginForm();
   }
@@ -49,7 +55,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     return this.formBuilder.group({
       email: ['', [
         Validators.required,
-        Validators.email,
+        FormValidationService.emailValidator(),
         Validators.maxLength(255)
       ]],
       password: ['', [
@@ -65,8 +71,7 @@ export class LoginComponent implements OnInit, OnDestroy {
    * Handle form submission
    */
   onSubmit(): void {
-    if (this.loginForm.valid && !this.isLoading) {
-      this.isLoading = true;
+    if (this.loginForm.valid) {
       this.errorMessage = '';
 
       const loginData: LoginRequest = {
@@ -78,17 +83,13 @@ export class LoginComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: (response) => {
-            this.isLoading = false;
             if (response.success) {
-              // Successful login
+              // Successful login - notification handled by service
               this.router.navigate([this.returnUrl]);
-            } else {
-              this.errorMessage = response.message || 'Login failed. Please try again.';
             }
           },
           error: (error) => {
-            this.isLoading = false;
-            this.errorMessage = error.message || 'Login failed. Please check your credentials and try again.';
+            // Error handling is done by the interceptor and service
             console.error('Login error:', error);
           }
         });
@@ -164,5 +165,19 @@ export class LoginComponent implements OnInit, OnDestroy {
     if (this.errorMessage) {
       this.errorMessage = '';
     }
+  }
+
+  /**
+   * Check if login is in progress
+   */
+  get isLoginLoading(): boolean {
+    return this.loadingService.getLoadingState('login');
+  }
+
+  /**
+   * Get form control for template access
+   */
+  getFormControl(controlName: string) {
+    return this.loginForm.get(controlName);
   }
 }

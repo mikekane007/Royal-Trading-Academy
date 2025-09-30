@@ -1,0 +1,149 @@
+.form-field {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.form-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 6px;
+  
+  .required-asterisk {
+    color: #ef4444;
+    margin-left: 2px;
+  }
+}
+
+.form-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #374151;
+  background-color: #ffffff;
+  transition: all 0.2s ease-in-out;
+
+  &:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  &:disabled {
+    background-color: #f9fafb;
+    color: #9ca3af;
+    cursor: not-allowed;
+  }
+
+  &::placeholder {
+    color: #9ca3af;
+  }
+
+  &.form-input-error {
+    border-color: #ef4444;
+    
+    &:focus {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+  }
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.form-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  pointer-events: none;
+  
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.form-error {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #ef4444;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  &::before {
+    content: '⚠';
+    font-size: 14px;
+  }
+}
+
+.form-hint {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+// Field variations
+.form-field-success {
+  .form-input {
+    border-color: #10b981;
+    
+    &:focus {
+      border-color: #10b981;
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+  }
+}
+
+.form-field-warning {
+  .form-input {
+    border-color: #f59e0b;
+    
+    &:focus {
+      border-color: #f59e0b;
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+    }
+  }
+}
+
+// Size variations
+.form-field-small {
+  .form-input {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+}
+
+.form-field-large {
+  .form-input {
+    padding: 16px 20px;
+    font-size: 16px;
+  }
+}
+
+// Mobile responsiveness
+@media (max-width: 768px) {
+  .form-input {
+    padding: 14px 16px;
+    font-size: 16px; // Prevents zoom on iOS
+  }
+  
+  .form-label {
+    font-size: 15px;
+  }
+}

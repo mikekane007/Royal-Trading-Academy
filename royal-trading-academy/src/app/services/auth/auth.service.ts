@@ -4,6 +4,8 @@ import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { User, UserRole } from '../../models/user/user.model';
+import { LoadingService } from '../loading/loading.service';
+import { NotificationService } from '../notification/notification.service';
 
 export interface LoginRequest {
   email: string;
@@ -53,7 +55,9 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private loadingService: LoadingService,
+    private notificationService: NotificationService
   ) {
     // Check token validity on service initialization only in browser
     if (this.isBrowser()) {
@@ -80,14 +84,21 @@ export class AuthService {
    * Login user
    */
   login(loginData: LoginRequest): Observable<AuthResponse> {
+    this.loadingService.setLoadingState('login', true);
+    
     return this.http.post<AuthResponse>(`${this.API_URL}/login`, loginData)
       .pipe(
         tap(response => {
           if (response.success) {
             this.setAuthData(response);
+            this.notificationService.showSuccess('Login successful! Welcome back.');
           }
         }),
-        catchError(this.handleError)
+        catchError(error => {
+          this.loadingService.setLoadingState('login', false);
+          return this.handleError(error);
+        }),
+        tap(() => this.loadingService.setLoadingState('login', false))
       );
   }
 

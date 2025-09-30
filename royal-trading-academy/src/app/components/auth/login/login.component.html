@@ -7,65 +7,48 @@
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form" novalidate>
       <!-- Email Field -->
-      <div class="form-group">
-        <label for="email" class="form-label">Email Address</label>
-        <div class="input-wrapper">
-          <input
-            id="email"
-            type="email"
-            formControlName="email"
-            class="form-input"
-            [class.error]="hasError('email')"
-            placeholder="Enter your email address"
-            autocomplete="email"
-            (input)="onInputChange()"
-          />
-          <div class="input-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-              <polyline points="22,6 12,13 2,6"></polyline>
-            </svg>
-          </div>
-        </div>
-        <div class="error-message" *ngIf="hasError('email')">
-          {{ getErrorMessage('email') }}
-        </div>
-      </div>
+      <app-form-field
+        label="Email Address"
+        type="email"
+        placeholder="Enter your email address"
+        [control]="getFormControl('email')"
+        fieldName="email"
+        [required]="true"
+        [icon]="true"
+      >
+        <svg slot="icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+          <polyline points="22,6 12,13 2,6"></polyline>
+        </svg>
+      </app-form-field>
 
       <!-- Password Field -->
-      <div class="form-group">
-        <label for="password" class="form-label">Password</label>
-        <div class="input-wrapper">
-          <input
-            id="password"
-            [type]="showPassword ? 'text' : 'password'"
-            formControlName="password"
-            class="form-input"
-            [class.error]="hasError('password')"
-            placeholder="Enter your password"
-            autocomplete="current-password"
-            (input)="onInputChange()"
-          />
-          <button
-            type="button"
-            class="password-toggle"
-            (click)="togglePasswordVisibility()"
-            [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
-          >
-            <svg *ngIf="!showPassword" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-              <circle cx="12" cy="12" r="3"></circle>
-            </svg>
-            <svg *ngIf="showPassword" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-              <line x1="1" y1="1" x2="23" y2="23"></line>
-            </svg>
-          </button>
-        </div>
-        <div class="error-message" *ngIf="hasError('password')">
-          {{ getErrorMessage('password') }}
-        </div>
-      </div>
+      <app-form-field
+        label="Password"
+        [type]="showPassword ? 'text' : 'password'"
+        placeholder="Enter your password"
+        [control]="getFormControl('password')"
+        fieldName="password"
+        [required]="true"
+        [icon]="true"
+      >
+        <button 
+          slot="icon"
+          type="button"
+          class="password-toggle"
+          (click)="togglePasswordVisibility()"
+          [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+        >
+          <svg *ngIf="!showPassword" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+          <svg *ngIf="showPassword" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+            <line x1="1" y1="1" x2="23" y2="23"></line>
+          </svg>
+        </button>
+      </app-form-field>
 
       <!-- Remember Me -->
       <div class="form-group checkbox-group">
@@ -97,17 +80,12 @@
       <button
         type="submit"
         class="submit-button"
-        [disabled]="isLoading || loginForm.invalid"
-        [class.loading]="isLoading"
+        [disabled]="isLoginLoading || loginForm.invalid"
+        [class.loading]="isLoginLoading"
       >
-        <span *ngIf="!isLoading">Sign In</span>
-        <span *ngIf="isLoading" class="loading-content">
-          <svg class="loading-spinner" width="20" height="20" viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="31.416" stroke-dashoffset="31.416">
-              <animate attributeName="stroke-dasharray" dur="2s" values="0 31.416;15.708 15.708;0 31.416" repeatCount="indefinite"/>
-              <animate attributeName="stroke-dashoffset" dur="2s" values="0;-15.708;-31.416" repeatCount="indefinite"/>
-            </circle>
-          </svg>
+        <span *ngIf="!isLoginLoading">Sign In</span>
+        <span *ngIf="isLoginLoading" class="loading-content">
+          <app-loading-spinner size="small"></app-loading-spinner>
           Signing In...
         </span>
       </button>

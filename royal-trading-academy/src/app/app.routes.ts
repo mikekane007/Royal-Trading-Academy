@@ -2,6 +2,8 @@ import { Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/auth/login/login.component';
 import { RegisterComponent } from './components/auth/register/register.component';
+import { NotFoundComponent } from './components/error/not-found/not-found.component';
+import { ErrorPageComponent } from './components/error/error-page/error-page.component';
 import { authGuard, guestGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -62,5 +64,14 @@ export const routes: Routes = [
     loadComponent: () => import('./components/forum/moderation/forum-moderation.component').then(m => m.ForumModerationComponent),
     canActivate: [authGuard]
   },
-  { path: '**', redirectTo: '' }
+  // Error pages
+  { 
+    path: 'error', 
+    component: ErrorPageComponent
+  },
+  { 
+    path: '404', 
+    component: NotFoundComponent
+  },
+  { path: '**', component: NotFoundComponent }
 ];
