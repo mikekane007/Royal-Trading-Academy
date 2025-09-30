@@ -6,6 +6,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { AuthService, LoginRequest } from '../../../services/auth/auth.service';
 import { LoadingService } from '../../../services/loading/loading.service';
 import { FormValidationService } from '../../../services/validation/form-validation.service';
+import { SanitizationService } from '../../../services/security/sanitization.service';
 import { FormFieldComponent } from '../../../shared/components/form-field/form-field.component';
 import { LoadingSpinnerComponent } from '../../../shared/components/loading-spinner/loading-spinner.component';
 
@@ -31,7 +32,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private loadingService: LoadingService,
-    public validationService: FormValidationService
+    public validationService: FormValidationService,
+    private sanitizationService: SanitizationService
   ) {
     this.loginForm = this.createLoginForm();
   }
@@ -56,12 +58,15 @@ export class LoginComponent implements OnInit, OnDestroy {
       email: ['', [
         Validators.required,
         FormValidationService.emailValidator(),
+        FormValidationService.noXssValidator(),
+        FormValidationService.noSqlInjectionValidator(),
         Validators.maxLength(255)
       ]],
       password: ['', [
         Validators.required,
-        Validators.minLength(6),
-        Validators.maxLength(128)
+        Validators.minLength(8),
+        Validators.maxLength(128),
+        FormValidationService.noXssValidator()
       ]],
       rememberMe: [false]
     });
@@ -74,9 +79,19 @@ export class LoginComponent implements OnInit, OnDestroy {
     if (this.loginForm.valid) {
       this.errorMessage = '';
 
+      // Sanitize form data before submission
+      const sanitizedFormData = this.validationService.sanitizeFormData(this.loginForm.value);
+      
+      // Validate for security issues
+      const securityValidation = this.validationService.validateFormSecurity(sanitizedFormData);
+      if (!securityValidation.isValid) {
+        this.errorMessage = 'Invalid input detected. Please check your entries.';
+        return;
+      }
+
       const loginData: LoginRequest = {
-        email: this.loginForm.value.email.trim().toLowerCase(),
-        password: this.loginForm.value.password
+        email: sanitizedFormData.email.trim().toLowerCase(),
+        password: sanitizedFormData.password
       };
 
       this.authService.login(loginData)
@@ -89,7 +104,12 @@ export class LoginComponent implements OnInit, OnDestroy {
             }
           },
           error: (error) => {
-            // Error handling is done by the interceptor and service
+            // Enhanced error handling for security
+            if (error.message.includes('locked')) {
+              this.errorMessage = error.message;
+            } else {
+              this.errorMessage = 'Login failed. Please check your credentials.';
+            }
             console.error('Login error:', error);
           }
         });
@@ -111,10 +131,17 @@ export class LoginComponent implements OnInit, OnDestroy {
   getErrorMessage(controlName: string): string {
     const control = this.loginForm.get(controlName);
     if (control && control.errors && control.touched) {
+      // Check for security-related errors first
+      const securityError = this.validationService.getSecurityErrorMessage(controlName, control.errors);
+      if (securityError !== this.validationService.getErrorMessage(controlName, control.errors)) {
+        return securityError;
+      }
+
+      // Standard validation errors
       if (control.errors['required']) {
         return `${this.getFieldDisplayName(controlName)} is required`;
       }
-      if (control.errors['email']) {
+      if (control.errors['invalidEmail']) {
         return 'Please enter a valid email address';
       }
       if (control.errors['minlength']) {
