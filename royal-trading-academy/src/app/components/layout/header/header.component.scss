@@ -128,18 +128,36 @@
   font-size: var(--rta-font-size-sm);
 }
 
-// Mobile Menu Toggle
+// Mobile Menu Toggle - Enhanced for touch
 .rta-mobile-toggle {
   display: none;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 40px;
-  height: 40px;
+  width: 48px; // Larger touch target
+  height: 48px;
   background: none;
   border: none;
   cursor: pointer;
   padding: 0;
+  border-radius: var(--rta-border-radius-sm);
+  transition: background-color 0.2s ease;
+  
+  // Touch-friendly hover state
+  &:hover {
+    background-color: rgba(63, 81, 181, 0.1);
+  }
+  
+  &:active {
+    background-color: rgba(63, 81, 181, 0.2);
+    transform: scale(0.95);
+  }
+  
+  // Focus styles for accessibility
+  &:focus-visible {
+    outline: 2px solid var(--rta-primary);
+    outline-offset: 2px;
+  }
 
   @media (max-width: 768px) {
     display: flex;
@@ -169,7 +187,7 @@
   }
 }
 
-// Mobile Menu
+// Mobile Menu - Enhanced with better animations and touch support
 .rta-mobile-menu {
   display: none;
   position: absolute;
@@ -182,7 +200,10 @@
   transform: translateY(-100%);
   opacity: 0;
   visibility: hidden;
-  transition: all 0.3s ease-in-out;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch; // Smooth scrolling on iOS
 
   @media (max-width: 768px) {
     display: block;
@@ -192,6 +213,12 @@
     transform: translateY(0);
     opacity: 1;
     visibility: visible;
+  }
+  
+  // Backdrop blur effect for modern browsers
+  @supports (backdrop-filter: blur(10px)) {
+    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.95);
   }
 }
 
@@ -220,22 +247,45 @@
 
 .rta-mobile-nav-link {
   display: block;
-  padding: var(--rta-spacing-md);
+  padding: var(--rta-spacing-lg) var(--rta-spacing-md); // Larger touch targets
   text-decoration: none;
   color: var(--rta-gray-700);
   font-weight: 500;
-  font-size: var(--rta-font-size-base);
+  font-size: var(--rta-font-size-lg); // Slightly larger for mobile
   transition: all 0.2s ease-in-out;
+  min-height: var(--rta-touch-target-comfortable);
+  display: flex;
+  align-items: center;
+  position: relative;
 
+  // Touch-friendly hover states
   &:hover {
     color: var(--rta-primary);
     background-color: var(--rta-gray-50);
   }
-
+  
+  // Active state with better visual feedback
   &.active {
     color: var(--rta-primary);
-    background-color: var(--rta-gray-50);
-    border-left: 3px solid var(--rta-accent);
+    background-color: var(--rta-primary-light);
+    border-left: 4px solid var(--rta-accent);
+    font-weight: 600;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      right: var(--rta-spacing-md);
+      width: 8px;
+      height: 8px;
+      background-color: var(--rta-accent);
+      border-radius: 50%;
+    }
+  }
+  
+  // Touch feedback
+  &:active {
+    background-color: var(--rta-gray-100);
+    transform: scale(0.98);
   }
 }
 
