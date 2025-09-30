@@ -20,8 +20,30 @@ export class CourseService {
 
   constructor(private http: HttpClient) {}
 
-  // Get all courses
-  getCourses(): Observable<Course[]> {
+  // Get all courses with optional filters
+  getCourses(filters?: any): Observable<Course[]> {
+    if (filters) {
+      // Build query parameters
+      const params = new URLSearchParams();
+      Object.keys(filters).forEach(key => {
+        if (filters[key]) {
+          params.append(key, filters[key]);
+        }
+      });
+      const queryString = params.toString();
+      // return this.http.get<Course[]>(`${this.apiUrl}/courses?${queryString}`);
+      
+      // For mock data, filter locally
+      let courses = this.getMockCourses();
+      if (filters.category) {
+        courses = courses.filter(c => c.category === filters.category);
+      }
+      if (filters.difficulty) {
+        courses = courses.filter(c => c.difficulty === filters.difficulty);
+      }
+      return of(courses);
+    }
+    
     // For now, return mock data. In production, this would be:
     // return this.http.get<Course[]>(`${this.apiUrl}/courses`);
     return of(this.getMockCourses());
@@ -33,6 +55,80 @@ export class CourseService {
     // return this.http.get<Course>(`${this.apiUrl}/courses/${id}`);
     const course = this.getMockCourses().find(c => c.id === id);
     return of(course!);
+  }
+
+  // Get course by ID (alias for getCourse to match test expectations)
+  getCourseById(id: string): Observable<Course> {
+    return this.getCourse(id);
+  }
+
+  // Search courses by query
+  searchCourses(query: string): Observable<Course[]> {
+    // For now, return mock filtered data. In production, this would be:
+    // return this.http.get<Course[]>(`${this.apiUrl}/courses/search?q=${encodeURIComponent(query)}`);
+    const courses = this.getMockCourses().filter(course => 
+      course.title.toLowerCase().includes(query.toLowerCase()) ||
+      course.description.toLowerCase().includes(query.toLowerCase()) ||
+      course.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase()))
+    );
+    return of(courses);
+  }
+
+  // Get enrolled courses for user
+  getEnrolledCourses(): Observable<any[]> {
+    // For now, return mock data. In production, this would be:
+    // return this.http.get<any[]>(`${this.apiUrl}/users/enrollments`);
+    return of([
+      {
+        id: '1',
+        user: { id: '1', email: 'test@example.com' },
+        course: this.getMockCourses()[0],
+        enrolledAt: new Date(),
+        progress: 65,
+        lastAccessedAt: new Date()
+      }
+    ]);
+  }
+
+  // Get course progress for user
+  getCourseProgress(courseId: string): Observable<any> {
+    // For now, return mock data. In production, this would be:
+    // return this.http.get<any>(`${this.apiUrl}/users/progress/${courseId}`);
+    return of({
+      courseId,
+      completedLessons: 5,
+      totalLessons: 10,
+      percentage: 50,
+      lastAccessedAt: new Date()
+    });
+  }
+
+  // Update lesson progress
+  updateLessonProgress(lessonId: string, progressData: any): Observable<any> {
+    // For now, return mock success. In production, this would be:
+    // return this.http.put(`${this.apiUrl}/lessons/${lessonId}/progress`, progressData);
+    return of({ message: 'Progress updated' });
+  }
+
+  // Rate a course
+  rateCourse(courseId: string, rating: number, review?: string): Observable<any> {
+    // For now, return mock success. In production, this would be:
+    // return this.http.post(`${this.apiUrl}/courses/${courseId}/rating`, { rating, review });
+    return of({ message: 'Rating submitted' });
+  }
+
+  // Get course categories
+  getCourseCategories(): Observable<string[]> {
+    // For now, return mock data. In production, this would be:
+    // return this.http.get<string[]>(`${this.apiUrl}/courses/categories`);
+    return of(['Forex', 'Stocks', 'Cryptocurrency', 'Options']);
+  }
+
+  // Get featured courses
+  getFeaturedCourses(): Observable<Course[]> {
+    // For now, return mock data. In production, this would be:
+    // return this.http.get<Course[]>(`${this.apiUrl}/courses/featured`);
+    return of(this.getMockCourses().slice(0, 2)); // Return first 2 courses as featured
   }
 
   // Get student dashboard data
