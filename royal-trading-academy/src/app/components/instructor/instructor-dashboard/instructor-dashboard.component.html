@@ -1,0 +1,205 @@
+<div class="instructor-dashboard">
+  <div class="dashboard-header">
+    <div class="header-content">
+      <h1 class="dashboard-title">Instructor Dashboard</h1>
+      <p class="dashboard-subtitle">Manage your courses and track your teaching progress</p>
+    </div>
+    <div class="header-actions">
+      <button 
+        class="create-course-btn"
+        routerLink="/instructor/courses/create"
+        (click)="navigateToCreateCourse()">
+        <span class="material-icons">add</span>
+        Create Course
+      </button>
+      <button 
+        class="refresh-btn"
+        (click)="refreshDashboard()"
+        [disabled]="isLoading">
+        <span class="material-icons">refresh</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="stats-grid" *ngIf="!isLoading">
+    <div class="stat-card">
+      <div class="stat-icon courses">
+        <span class="material-icons">library_books</span>
+      </div>
+      <div class="stat-content">
+        <h3>{{ instructorStats.totalCourses }}</h3>
+        <p>Total Courses</p>
+        <span class="stat-detail">{{ instructorStats.completedCourses }} published</span>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon students">
+        <span class="material-icons">school</span>
+      </div>
+      <div class="stat-content">
+        <h3>{{ instructorStats.totalStudents }}</h3>
+        <p>Total Students</p>
+        <span class="stat-detail">Across all courses</span>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon revenue">
+        <span class="material-icons">attach_money</span>
+      </div>
+      <div class="stat-content">
+        <h3>{{ formatCurrency(instructorStats.totalRevenue) }}</h3>
+        <p>Total Revenue</p>
+        <span class="stat-detail">This month</span>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon rating">
+        <span class="material-icons">star</span>
+      </div>
+      <div class="stat-content">
+        <h3>{{ instructorStats.averageRating }}</h3>
+        <p>Average Rating</p>
+        <span class="stat-detail">From student reviews</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State for Stats -->
+  <div class="loading-stats" *ngIf="isLoading">
+    <div class="skeleton-card" *ngFor="let item of [1,2,3,4]"></div>
+  </div>
+
+  <!-- Main Content Grid -->
+  <div class="content-grid">
+    <!-- My Courses Section -->
+    <div class="courses-section">
+      <div class="section-header">
+        <h2>My Courses</h2>
+        <button 
+          class="view-all-btn"
+          routerLink="/instructor/courses">
+          View All
+        </button>
+      </div>
+
+      <div class="courses-list" *ngIf="!isLoading && myCourses.length > 0">
+        <div 
+          class="course-card"
+          *ngFor="let course of myCourses; trackBy: trackByCourseId">
+          <div class="course-thumbnail">
+            <img 
+              [src]="course.thumbnailUrl" 
+              [alt]="course.title"
+              onerror="this.src='/assets/images/course-placeholder.jpg'">
+            <div class="course-status" [ngClass]="getCourseStatusClass(course.isPublished)">
+              {{ getCourseStatusText(course.isPublished) }}
+            </div>
+          </div>
+          
+          <div class="course-info">
+            <h3 class="course-title">{{ course.title }}</h3>
+            <p class="course-category">{{ course.category }} • {{ course.level }}</p>
+            
+            <div class="course-stats">
+              <div class="stat-item">
+                <span class="material-icons">people</span>
+                <span>{{ course.enrollmentCount }} students</span>
+              </div>
+              <div class="stat-item">
+                <span class="material-icons">star</span>
+                <span>{{ course.rating }}</span>
+              </div>
+              <div class="stat-item">
+                <span class="material-icons">schedule</span>
+                <span>{{ formatDuration(course.duration) }}</span>
+              </div>
+            </div>
+            
+            <div class="course-actions">
+              <button 
+                class="edit-btn"
+                routerLink="/instructor/courses/{{ course.id }}/edit"
+                (click)="navigateToCourseEditor(course.id)">
+                <span class="material-icons">edit</span>
+                Edit
+              </button>
+              <button class="analytics-btn" (click)="navigateToAnalytics()">
+                <span class="material-icons">analytics</span>
+                Analytics
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State for Courses -->
+      <div class="empty-courses" *ngIf="!isLoading && myCourses.length === 0">
+        <span class="material-icons">library_add</span>
+        <h3>No courses yet</h3>
+        <p>Create your first course to start teaching</p>
+        <button 
+          class="create-first-course-btn"
+          routerLink="/instructor/courses/create"
+          (click)="navigateToCreateCourse()">
+          Create Your First Course
+        </button>
+      </div>
+
+      <!-- Loading State for Courses -->
+      <div class="loading-courses" *ngIf="isLoading">
+        <div class="skeleton-course-card" *ngFor="let item of [1,2]"></div>
+      </div>
+    </div>
+
+    <!-- Recent Activity Section -->
+    <div class="activity-section">
+      <div class="section-header">
+        <h2>Recent Enrollments</h2>
+      </div>
+
+      <div class="activity-list" *ngIf="!isLoading && recentEnrollments.length > 0">
+        <div 
+          class="activity-item"
+          *ngFor="let enrollment of recentEnrollments; trackBy: trackByEnrollmentId">
+          <div class="student-avatar">
+            {{ enrollment.studentName.split(' ').map(n => n[0]).join('') }}
+          </div>
+          
+          <div class="activity-content">
+            <div class="activity-header">
+              <span class="student-name">{{ enrollment.studentName }}</span>
+              <span class="enrollment-time">{{ enrollment.enrolledAt | date:'short' }}</span>
+            </div>
+            <div class="course-name">{{ enrollment.courseName }}</div>
+            <div class="progress-info">
+              <div class="progress-bar">
+                <div 
+                  class="progress-fill"
+                  [ngClass]="getProgressBarClass(enrollment.progress)"
+                  [style.width.%]="enrollment.progress">
+                </div>
+              </div>
+              <span class="progress-text">{{ enrollment.progress }}% complete</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State for Activity -->
+      <div class="empty-activity" *ngIf="!isLoading && recentEnrollments.length === 0">
+        <span class="material-icons">notifications_none</span>
+        <h3>No recent activity</h3>
+        <p>Student enrollments will appear here</p>
+      </div>
+
+      <!-- Loading State for Activity -->
+      <div class="loading-activity" *ngIf="isLoading">
+        <div class="skeleton-activity-item" *ngFor="let item of [1,2,3]"></div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,131 @@
+<div class="admin-dashboard">
+  <div class="dashboard-header">
+    <h1 class="dashboard-title">Admin Dashboard</h1>
+    <button 
+      class="refresh-btn"
+      (click)="refreshDashboard()"
+      [disabled]="isLoading">
+      <span class="material-icons">refresh</span>
+      Refresh
+    </button>
+  </div>
+
+  <!-- Dashboard Statistics -->
+  <div class="stats-grid" *ngIf="!isLoading">
+    <div class="stat-card">
+      <div class="stat-icon">
+        <span class="material-icons">people</span>
+      </div>
+      <div class="stat-content">
+        <h3>{{ stats.totalUsers | number }}</h3>
+        <p>Total Users</p>
+        <span class="stat-change positive">{{ stats.activeUsers }} active</span>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">
+        <span class="material-icons">school</span>
+      </div>
+      <div class="stat-content">
+        <h3>{{ stats.totalCourses | number }}</h3>
+        <p>Total Courses</p>
+        <span class="stat-change neutral">{{ stats.pendingApprovals }} pending</span>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">
+        <span class="material-icons">assignment</span>
+      </div>
+      <div class="stat-content">
+        <h3>{{ stats.totalEnrollments | number }}</h3>
+        <p>Total Enrollments</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">
+        <span class="material-icons">attach_money</span>
+      </div>
+      <div class="stat-content">
+        <h3>{{ formatCurrency(stats.totalRevenue) }}</h3>
+        <p>Total Revenue</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-state" *ngIf="isLoading">
+    <div class="skeleton-stats">
+      <div class="skeleton-card" *ngFor="let item of [1,2,3,4]"></div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="quick-actions">
+    <h2>Quick Actions</h2>
+    <div class="actions-grid">
+      <button 
+        class="action-card"
+        routerLink="/admin/users"
+        (click)="navigateToUserManagement()">
+        <span class="material-icons">manage_accounts</span>
+        <h3>User Management</h3>
+        <p>Manage user accounts and permissions</p>
+      </button>
+
+      <button 
+        class="action-card"
+        routerLink="/admin/courses"
+        (click)="navigateToCourseManagement()">
+        <span class="material-icons">library_books</span>
+        <h3>Course Management</h3>
+        <p>Create and manage courses</p>
+      </button>
+
+      <button 
+        class="action-card"
+        routerLink="/admin/analytics"
+        (click)="navigateToAnalytics()">
+        <span class="material-icons">analytics</span>
+        <h3>Analytics & Reports</h3>
+        <p>View platform analytics and reports</p>
+      </button>
+
+      <button 
+        class="action-card"
+        routerLink="/admin/moderation"
+        (click)="navigateToContentModeration()">
+        <span class="material-icons">gavel</span>
+        <h3>Content Moderation</h3>
+        <p>Review and moderate content</p>
+      </button>
+    </div>
+  </div>
+
+  <!-- Recent Activity -->
+  <div class="recent-activity">
+    <h2>Recent Activity</h2>
+    <div class="activity-list" *ngIf="recentActivity.length > 0; else noActivity">
+      <div 
+        class="activity-item"
+        *ngFor="let activity of recentActivity; trackBy: trackByActivityId">
+        <div class="activity-icon" [ngClass]="getActivityColor(activity.type)">
+          <span class="material-icons">{{ getActivityIcon(activity.type) }}</span>
+        </div>
+        <div class="activity-content">
+          <p class="activity-description">{{ activity.description }}</p>
+          <span class="activity-time">{{ activity.timestamp | date:'short' }}</span>
+        </div>
+      </div>
+    </div>
+    
+    <ng-template #noActivity>
+      <div class="no-activity">
+        <span class="material-icons">inbox</span>
+        <p>No recent activity</p>
+      </div>
+    </ng-template>
+  </div>
+</div>

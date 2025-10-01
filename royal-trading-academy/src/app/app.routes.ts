@@ -76,6 +76,43 @@ export const routes: Routes = [
     loadComponent: () => import('./components/courses/lesson-viewer/lesson-viewer.component').then(m => m.LessonViewerComponent),
     canActivate: [authGuard]
   },
+  // Admin routes
+  { 
+    path: 'admin', 
+    loadComponent: () => import('./components/admin/admin-dashboard/admin-dashboard.component').then(m => m.AdminDashboardComponent),
+    canActivate: [authGuard]
+  },
+  { 
+    path: 'admin/users', 
+    loadComponent: () => import('./components/admin/user-management/user-management.component').then(m => m.UserManagementComponent),
+    canActivate: [authGuard]
+  },
+  { 
+    path: 'admin/analytics', 
+    loadComponent: () => import('./components/admin/analytics/analytics.component').then(m => m.AnalyticsComponent),
+    canActivate: [authGuard]
+  },
+  { 
+    path: 'admin/moderation', 
+    loadComponent: () => import('./components/admin/content-moderation/content-moderation.component').then(m => m.ContentModerationComponent),
+    canActivate: [authGuard]
+  },
+  // Instructor routes
+  { 
+    path: 'instructor', 
+    loadComponent: () => import('./components/instructor/instructor-dashboard/instructor-dashboard.component').then(m => m.InstructorDashboardComponent),
+    canActivate: [authGuard]
+  },
+  { 
+    path: 'instructor/courses/create', 
+    loadComponent: () => import('./components/instructor/course-editor/course-editor.component').then(m => m.CourseEditorComponent),
+    canActivate: [authGuard]
+  },
+  { 
+    path: 'instructor/courses/:id/edit', 
+    loadComponent: () => import('./components/instructor/course-editor/course-editor.component').then(m => m.CourseEditorComponent),
+    canActivate: [authGuard]
+  },
   // Error pages
   { 
     path: 'error', 

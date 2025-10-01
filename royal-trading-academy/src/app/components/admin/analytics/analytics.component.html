@@ -1,0 +1,177 @@
+<div class="analytics-dashboard">
+  <div class="page-header">
+    <div class="header-content">
+      <h1>Analytics & Reports</h1>
+      <p>Platform performance and insights</p>
+    </div>
+    
+    <div class="header-actions">
+      <select 
+        [(ngModel)]="selectedTimeRange" 
+        (change)="onTimeRangeChange()"
+        class="time-range-select">
+        <option *ngFor="let range of timeRanges" [value]="range.value">
+          {{ range.label }}
+        </option>
+      </select>
+      
+      <button 
+        class="export-btn"
+        (click)="exportData()">
+        <span class="material-icons">download</span>
+        Export
+      </button>
+      
+      <button 
+        class="refresh-btn"
+        (click)="refreshData()"
+        [disabled]="isLoading">
+        <span class="material-icons">refresh</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="analytics-content" *ngIf="!isLoading && analyticsData">
+    
+    <!-- User Growth Chart -->
+    <div class="chart-section">
+      <div class="chart-header">
+        <h2>User Growth</h2>
+        <div class="chart-legend">
+          <div class="legend-item">
+            <div class="legend-color user-growth"></div>
+            <span>New Users</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="chart-container">
+        <div class="bar-chart">
+          <div 
+            class="bar-item"
+            *ngFor="let item of analyticsData.userGrowth">
+            <div class="bar-wrapper">
+              <div 
+                class="bar user-growth-bar"
+                [style.height.%]="getBarWidth(item.users, getMaxValue(analyticsData.userGrowth, 'users'))">
+              </div>
+            </div>
+            <div class="bar-label">{{ item.month }}</div>
+            <div class="bar-value">{{ item.users }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Course Enrollments Chart -->
+    <div class="chart-section">
+      <div class="chart-header">
+        <h2>Course Enrollments</h2>
+        <div class="chart-legend">
+          <div class="legend-item">
+            <div class="legend-color enrollments"></div>
+            <span>Enrollments</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="chart-container">
+        <div class="horizontal-bar-chart">
+          <div 
+            class="bar-item"
+            *ngFor="let item of analyticsData.courseEnrollments">
+            <div class="bar-label">{{ item.course }}</div>
+            <div class="bar-wrapper">
+              <div 
+                class="bar enrollments-bar"
+                [style.width.%]="getBarWidth(item.enrollments, getMaxValue(analyticsData.courseEnrollments, 'enrollments'))">
+              </div>
+            </div>
+            <div class="bar-value">{{ item.enrollments }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Revenue Chart -->
+    <div class="chart-section">
+      <div class="chart-header">
+        <h2>Revenue Trends</h2>
+        <div class="chart-legend">
+          <div class="legend-item">
+            <div class="legend-color revenue"></div>
+            <span>Monthly Revenue</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="chart-container">
+        <div class="bar-chart">
+          <div 
+            class="bar-item"
+            *ngFor="let item of analyticsData.revenue">
+            <div class="bar-wrapper">
+              <div 
+                class="bar revenue-bar"
+                [style.height.%]="getBarWidth(item.amount, getMaxValue(analyticsData.revenue, 'amount'))">
+              </div>
+            </div>
+            <div class="bar-label">{{ item.month }}</div>
+            <div class="bar-value">{{ formatCurrency(item.amount) }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top Instructors Table -->
+    <div class="table-section">
+      <div class="section-header">
+        <h2>Top Instructors</h2>
+      </div>
+      
+      <div class="instructors-table">
+        <div class="table-header">
+          <div class="header-cell">Instructor</div>
+          <div class="header-cell">Students</div>
+          <div class="header-cell">Revenue</div>
+        </div>
+        
+        <div class="table-body">
+          <div 
+            class="table-row"
+            *ngFor="let instructor of analyticsData.topInstructors; let i = index">
+            <div class="instructor-cell">
+              <div class="instructor-rank">{{ i + 1 }}</div>
+              <div class="instructor-name">{{ instructor.name }}</div>
+            </div>
+            <div class="students-cell">
+              <div class="students-count">{{ instructor.students }}</div>
+              <div class="progress-bar">
+                <div 
+                  class="progress-fill"
+                  [style.width.%]="getBarWidth(instructor.students, getMaxValue(analyticsData.topInstructors, 'students'))">
+                </div>
+              </div>
+            </div>
+            <div class="revenue-cell">{{ formatCurrency(instructor.revenue) }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-state" *ngIf="isLoading">
+    <div class="loading-spinner">
+      <span class="material-icons">analytics</span>
+      <p>Loading analytics data...</p>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="!isLoading && !analyticsData">
+    <span class="material-icons">bar_chart</span>
+    <h3>No analytics data available</h3>
+    <p>Analytics data will appear here once there's platform activity</p>
+  </div>
+</div>

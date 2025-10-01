@@ -1,0 +1,340 @@
+<div class="course-editor" *ngIf="!isLoading">
+  <div class="editor-header">
+    <div class="header-content">
+      <button class="back-btn" (click)="goBack()">
+        <span class="material-icons">arrow_back</span>
+      </button>
+      <div class="title-section">
+        <h1>{{ isEditMode ? 'Edit Course' : 'Create New Course' }}</h1>
+        <p *ngIf="courseForm.get('title')?.value">{{ courseForm.get('title')?.value }}</p>
+      </div>
+    </div>
+    
+    <div class="header-actions">
+      <button 
+        class="preview-btn"
+        (click)="previewCourse()"
+        [disabled]="!courseId"
+        *ngIf="isEditMode">
+        <span class="material-icons">visibility</span>
+        Preview
+      </button>
+      
+      <button 
+        class="save-draft-btn"
+        (click)="saveDraft()"
+        [disabled]="isSaving">
+        <span class="material-icons">save</span>
+        Save Draft
+      </button>
+      
+      <button 
+        class="publish-btn"
+        (click)="publishCourse()"
+        [disabled]="isSaving">
+        <span class="material-icons">publish</span>
+        {{ isEditMode ? 'Update & Publish' : 'Publish Course' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Tab Navigation -->
+  <div class="tab-navigation">
+    <button 
+      class="tab-btn"
+      [class.active]="activeTab === 'basic'"
+      (click)="setActiveTab('basic')">
+      <span class="material-icons">info</span>
+      Basic Info
+    </button>
+    
+    <button 
+      class="tab-btn"
+      [class.active]="activeTab === 'content'"
+      (click)="setActiveTab('content')">
+      <span class="material-icons">video_library</span>
+      Content
+    </button>
+    
+    <button 
+      class="tab-btn"
+      [class.active]="activeTab === 'objectives'"
+      (click)="setActiveTab('objectives')">
+      <span class="material-icons">checklist</span>
+      Objectives
+    </button>
+  </div>
+
+  <!-- Course Form -->
+  <form [formGroup]="courseForm" class="course-form">
+    
+    <!-- Basic Information Tab -->
+    <div class="tab-content" *ngIf="activeTab === 'basic'">
+      <div class="form-section">
+        <h2>Course Information</h2>
+        
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label for="title">Course Title *</label>
+            <input
+              id="title"
+              type="text"
+              formControlName="title"
+              placeholder="Enter course title"
+              [class.error]="isFieldInvalid('title')">
+            <div class="error-message" *ngIf="isFieldInvalid('title')">
+              {{ getFieldError('title') }}
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label for="description">Description *</label>
+            <textarea
+              id="description"
+              formControlName="description"
+              rows="4"
+              placeholder="Describe what students will learn in this course"
+              [class.error]="isFieldInvalid('description')"></textarea>
+            <div class="error-message" *ngIf="isFieldInvalid('description')">
+              {{ getFieldError('description') }}
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="category">Category *</label>
+            <select
+              id="category"
+              formControlName="category"
+              [class.error]="isFieldInvalid('category')">
+              <option value="">Select a category</option>
+              <option *ngFor="let category of categories" [value]="category">
+                {{ category }}
+              </option>
+            </select>
+            <div class="error-message" *ngIf="isFieldInvalid('category')">
+              {{ getFieldError('category') }}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="level">Level *</label>
+            <select
+              id="level"
+              formControlName="level"
+              [class.error]="isFieldInvalid('level')">
+              <option value="">Select difficulty level</option>
+              <option *ngFor="let level of levels" [value]="level.value">
+                {{ level.label }}
+              </option>
+            </select>
+            <div class="error-message" *ngIf="isFieldInvalid('level')">
+              {{ getFieldError('level') }}
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="price">Price (USD) *</label>
+            <input
+              id="price"
+              type="number"
+              formControlName="price"
+              min="0"
+              step="0.01"
+              placeholder="0.00"
+              [class.error]="isFieldInvalid('price')">
+            <div class="error-message" *ngIf="isFieldInvalid('price')">
+              {{ getFieldError('price') }}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="thumbnailUrl">Thumbnail URL</label>
+            <input
+              id="thumbnailUrl"
+              type="url"
+              formControlName="thumbnailUrl"
+              placeholder="https://example.com/image.jpg">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group full-width">
+            <label for="prerequisites">Prerequisites</label>
+            <textarea
+              id="prerequisites"
+              formControlName="prerequisites"
+              rows="3"
+              placeholder="List any prerequisites for this course"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Learning Objectives Tab -->
+    <div class="tab-content" *ngIf="activeTab === 'objectives'">
+      <div class="form-section">
+        <div class="section-header">
+          <h2>Learning Objectives</h2>
+          <button type="button" class="add-btn" (click)="addLearningObjective()">
+            <span class="material-icons">add</span>
+            Add Objective
+          </button>
+        </div>
+
+        <div class="objectives-list" formArrayName="learningObjectives">
+          <div 
+            class="objective-item"
+            *ngFor="let objective of learningObjectives.controls; let i = index; trackBy: trackByIndex">
+            <div class="objective-input">
+              <input
+                type="text"
+                [formControlName]="i"
+                placeholder="What will students learn?"
+                [class.error]="objective.invalid && objective.touched">
+            </div>
+            <button 
+              type="button" 
+              class="remove-btn"
+              (click)="removeLearningObjective(i)">
+              <span class="material-icons">delete</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="empty-state" *ngIf="learningObjectives.length === 0">
+          <span class="material-icons">checklist</span>
+          <p>No learning objectives added yet</p>
+          <button type="button" class="add-first-btn" (click)="addLearningObjective()">
+            Add First Objective
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content Tab -->
+    <div class="tab-content" *ngIf="activeTab === 'content'">
+      <div class="form-section">
+        <div class="section-header">
+          <h2>Course Lessons</h2>
+          <div class="lesson-stats">
+            <span class="lesson-count">{{ lessons.length }} lessons</span>
+            <span class="total-duration">{{ getTotalDuration() }}</span>
+          </div>
+          <button type="button" class="add-btn" (click)="addLesson()">
+            <span class="material-icons">add</span>
+            Add Lesson
+          </button>
+        </div>
+
+        <div class="lessons-list" formArrayName="lessons">
+          <div 
+            class="lesson-item"
+            *ngFor="let lesson of lessons.controls; let i = index; trackBy: trackByIndex"
+            [formGroupName]="i">
+            
+            <div class="lesson-header">
+              <div class="lesson-number">{{ i + 1 }}</div>
+              <div class="lesson-title-input">
+                <input
+                  type="text"
+                  formControlName="title"
+                  placeholder="Lesson title"
+                  [class.error]="lesson.get('title')?.invalid && lesson.get('title')?.touched">
+              </div>
+              <div class="lesson-actions">
+                <button 
+                  type="button" 
+                  class="move-btn"
+                  (click)="moveLessonUp(i)"
+                  [disabled]="i === 0">
+                  <span class="material-icons">keyboard_arrow_up</span>
+                </button>
+                <button 
+                  type="button" 
+                  class="move-btn"
+                  (click)="moveLessonDown(i)"
+                  [disabled]="i === lessons.length - 1">
+                  <span class="material-icons">keyboard_arrow_down</span>
+                </button>
+                <button 
+                  type="button" 
+                  class="remove-btn"
+                  (click)="removeLesson(i)">
+                  <span class="material-icons">delete</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="lesson-content">
+              <div class="form-row">
+                <div class="form-group full-width">
+                  <label>Description</label>
+                  <textarea
+                    formControlName="description"
+                    rows="2"
+                    placeholder="Brief description of this lesson"
+                    [class.error]="lesson.get('description')?.invalid && lesson.get('description')?.touched"></textarea>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Video URL</label>
+                  <input
+                    type="url"
+                    formControlName="videoUrl"
+                    placeholder="https://example.com/video.mp4"
+                    [class.error]="lesson.get('videoUrl')?.invalid && lesson.get('videoUrl')?.touched">
+                </div>
+
+                <div class="form-group">
+                  <label>Duration (minutes)</label>
+                  <input
+                    type="number"
+                    formControlName="duration"
+                    min="1"
+                    placeholder="0"
+                    [class.error]="lesson.get('duration')?.invalid && lesson.get('duration')?.touched">
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group checkbox-group">
+                  <label class="checkbox-label">
+                    <input
+                      type="checkbox"
+                      formControlName="isPreview">
+                    <span class="checkmark"></span>
+                    Allow as preview lesson
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="empty-state" *ngIf="lessons.length === 0">
+          <span class="material-icons">video_library</span>
+          <p>No lessons added yet</p>
+          <button type="button" class="add-first-btn" (click)="addLesson()">
+            Add First Lesson
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- Loading State -->
+<div class="loading-state" *ngIf="isLoading">
+  <div class="loading-spinner">
+    <span class="material-icons">hourglass_empty</span>
+    <p>Loading course...</p>
+  </div>
+</div>

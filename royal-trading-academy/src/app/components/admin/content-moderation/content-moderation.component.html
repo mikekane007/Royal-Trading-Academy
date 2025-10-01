@@ -1,0 +1,109 @@
+<div class="content-moderation">
+  <div class="page-header">
+    <div class="header-content">
+      <h1>Content Moderation</h1>
+      <p>Review and approve course submissions</p>
+    </div>
+    <button 
+      class="refresh-btn"
+      (click)="refreshData()"
+      [disabled]="isLoading">
+      <span class="material-icons">refresh</span>
+      Refresh
+    </button>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-section">
+    <div class="search-box">
+      <span class="material-icons">search</span>
+      <input
+        type="text"
+        placeholder="Search courses or instructors..."
+        [(ngModel)]="searchTerm"
+        (input)="onSearchChange()"
+        class="search-input">
+    </div>
+
+    <select 
+      [(ngModel)]="selectedCategory" 
+      (change)="onCategoryChange()"
+      class="category-filter">
+      <option *ngFor="let category of categories" [value]="category.value">
+        {{ category.label }}
+      </option>
+    </select>
+  </div>
+
+  <!-- Pending Courses List -->
+  <div class="courses-container" *ngIf="!isLoading">
+    <div class="courses-grid" *ngIf="filteredCourses.length > 0">
+      <div 
+        class="course-card"
+        *ngFor="let course of filteredCourses; trackBy: trackByCourseId">
+        
+        <div class="course-header">
+          <div class="course-info">
+            <h3 class="course-title">{{ course.title }}</h3>
+            <div class="course-meta">
+              <span class="instructor">by {{ course.instructorName }}</span>
+              <span class="category-badge">{{ course.category }}</span>
+            </div>
+            <div class="submission-date">
+              Submitted {{ formatDate(course.submittedAt) }}
+            </div>
+          </div>
+          
+          <div class="course-status">
+            <span class="status-badge status-pending">
+              {{ course.status }}
+            </span>
+          </div>
+        </div>
+
+        <div class="course-description">
+          <p>{{ course.description }}</p>
+        </div>
+
+        <div class="course-actions">
+          <button 
+            class="approve-btn"
+            (click)="approveCourse(course)"
+            title="Approve Course">
+            <span class="material-icons">check_circle</span>
+            Approve
+          </button>
+          
+          <button 
+            class="reject-btn"
+            (click)="rejectCourse(course)"
+            title="Reject Course">
+            <span class="material-icons">cancel</span>
+            Reject
+          </button>
+          
+          <button 
+            class="preview-btn"
+            title="Preview Course">
+            <span class="material-icons">visibility</span>
+            Preview
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="filteredCourses.length === 0">
+      <span class="material-icons">inbox</span>
+      <h3>No pending courses</h3>
+      <p>All course submissions have been reviewed</p>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-state" *ngIf="isLoading">
+    <div class="skeleton-grid">
+      <div class="skeleton-card" *ngFor="let item of [1,2,3,4]"></div>
+    </div>
+  </div>
+</div>

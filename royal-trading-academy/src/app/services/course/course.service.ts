@@ -173,6 +173,117 @@ export class CourseService {
     return of({ success: true });
   }
 
+  // Instructor methods for course management
+  async createCourse(courseData: any): Promise<Course> {
+    try {
+      // Mock implementation - replace with actual API call
+      const newCourse: Course = {
+        id: Date.now().toString(),
+        title: courseData.title,
+        description: courseData.description,
+        shortDescription: courseData.description.substring(0, 100),
+        price: courseData.price,
+        currency: 'USD',
+        difficulty: courseData.level === 'beginner' ? Difficulty.BEGINNER : 
+                   courseData.level === 'intermediate' ? Difficulty.INTERMEDIATE : Difficulty.ADVANCED,
+        level: courseData.level,
+        duration: courseData.duration,
+        instructor: {
+          id: 'current-instructor',
+          name: 'Current Instructor',
+          bio: 'Instructor bio',
+          profileImage: '/assets/images/instructor-placeholder.jpg',
+          credentials: [],
+          yearsExperience: 5
+        },
+        thumbnailUrl: courseData.thumbnail || '/assets/images/course-placeholder.jpg',
+        imageUrl: courseData.thumbnail || '/assets/images/course-placeholder.jpg',
+        totalLessons: courseData.lessons?.length || 0,
+        category: courseData.category,
+        tags: courseData.tags || [],
+        isPublished: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        enrollmentCount: 0,
+        rating: 0,
+        lessons: courseData.lessons || []
+      };
+
+      return newCourse;
+
+      // Uncomment when backend is ready:
+      // const response = await this.http.post<Course>(`${this.apiUrl}/courses`, courseData).toPromise();
+      // return response!;
+    } catch (error) {
+      console.error('Error creating course:', error);
+      throw error;
+    }
+  }
+
+  async updateCourse(courseId: string, courseData: any): Promise<Course> {
+    try {
+      // Mock implementation - replace with actual API call
+      console.log(`Updating course ${courseId}`, courseData);
+      
+      const updatedCourse = this.getMockCourses().find(c => c.id === courseId);
+      if (!updatedCourse) {
+        throw new Error('Course not found');
+      }
+
+      // Update course properties
+      Object.assign(updatedCourse, {
+        title: courseData.title,
+        description: courseData.description,
+        price: courseData.price,
+        duration: courseData.duration,
+        updatedAt: new Date()
+      });
+
+      return updatedCourse;
+
+      // Uncomment when backend is ready:
+      // const response = await this.http.put<Course>(`${this.apiUrl}/courses/${courseId}`, courseData).toPromise();
+      // return response!;
+    } catch (error) {
+      console.error('Error updating course:', error);
+      throw error;
+    }
+  }
+
+  async createDraft(courseData: any): Promise<Course> {
+    try {
+      // Mock implementation - replace with actual API call
+      const draftCourse = await this.createCourse(courseData);
+      draftCourse.isPublished = false;
+      
+      return draftCourse;
+
+      // Uncomment when backend is ready:
+      // const response = await this.http.post<Course>(`${this.apiUrl}/courses/draft`, courseData).toPromise();
+      // return response!;
+    } catch (error) {
+      console.error('Error creating draft:', error);
+      throw error;
+    }
+  }
+
+  async saveDraft(courseId: string, courseData: any): Promise<Course> {
+    try {
+      // Mock implementation - replace with actual API call
+      const updatedCourse = await this.updateCourse(courseId, courseData);
+      updatedCourse.isPublished = false;
+      
+      return updatedCourse;
+
+      // Uncomment when backend is ready:
+      // const response = await this.http.put<Course>(`${this.apiUrl}/courses/${courseId}/draft`, courseData).toPromise();
+      // return response!;
+    } catch (error) {
+      console.error('Error saving draft:', error);
+      throw error;
+    }
+  }
+
   // Mock data for development
   private getMockCourses(): Course[] {
     return [

@@ -1,0 +1,409 @@
+.user-management {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  .page-header {
+    margin-bottom: 2rem;
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: #1f2937;
+      margin: 0 0 0.5rem 0;
+    }
+
+    p {
+      color: #6b7280;
+      margin: 0;
+    }
+  }
+
+  .filters-section {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+
+    .search-box {
+      position: relative;
+      flex: 1;
+      min-width: 300px;
+
+      .material-icons {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #6b7280;
+        font-size: 1.25rem;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 0.75rem 1rem 0.75rem 3rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        transition: border-color 0.2s;
+
+        &:focus {
+          outline: none;
+          border-color: #3b82f6;
+          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+      }
+    }
+
+    .filter-controls {
+      display: flex;
+      gap: 1rem;
+
+      .filter-select {
+        padding: 0.75rem 1rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.5rem;
+        background: white;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: border-color 0.2s;
+
+        &:focus {
+          outline: none;
+          border-color: #3b82f6;
+          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+      }
+    }
+  }
+
+  .users-table-container {
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+
+    .users-table {
+      width: 100%;
+      border-collapse: collapse;
+
+      thead {
+        background: #f9fafb;
+
+        th {
+          padding: 1rem;
+          text-align: left;
+          font-weight: 600;
+          color: #374151;
+          border-bottom: 1px solid #e5e7eb;
+        }
+      }
+
+      tbody {
+        .user-row {
+          border-bottom: 1px solid #f3f4f6;
+          transition: background-color 0.2s;
+
+          &:hover {
+            background: #f9fafb;
+          }
+
+          &:last-child {
+            border-bottom: none;
+          }
+
+          td {
+            padding: 1rem;
+            vertical-align: middle;
+          }
+
+          .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+
+            .user-avatar {
+              width: 2.5rem;
+              height: 2.5rem;
+              background: #3b82f6;
+              color: white;
+              border-radius: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-weight: 600;
+              font-size: 0.875rem;
+            }
+
+            .user-details {
+              .user-name {
+                font-weight: 500;
+                color: #1f2937;
+                margin-bottom: 0.25rem;
+              }
+
+              .user-email {
+                color: #6b7280;
+                font-size: 0.875rem;
+              }
+            }
+          }
+
+          .role-select {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            background: white;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+
+            &.badge-admin {
+              background: #fef3c7;
+              border-color: #f59e0b;
+              color: #92400e;
+            }
+
+            &.badge-instructor {
+              background: #dbeafe;
+              border-color: #3b82f6;
+              color: #1e40af;
+            }
+
+            &.badge-student {
+              background: #d1fae5;
+              border-color: #10b981;
+              color: #065f46;
+            }
+
+            &:focus {
+              outline: none;
+              box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            }
+          }
+
+          .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+
+            &.badge-active {
+              background: #d1fae5;
+              color: #065f46;
+            }
+
+            &.badge-inactive {
+              background: #fee2e2;
+              color: #991b1b;
+            }
+          }
+
+          .enrollment-count {
+            font-weight: 500;
+            color: #1f2937;
+          }
+
+          .date-cell {
+            color: #6b7280;
+            font-size: 0.875rem;
+          }
+
+          .actions-cell {
+            .action-btn {
+              width: 2rem;
+              height: 2rem;
+              border: none;
+              border-radius: 0.375rem;
+              cursor: pointer;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              transition: all 0.2s;
+
+              .material-icons {
+                font-size: 1.125rem;
+              }
+
+              &.btn-activate {
+                background: #d1fae5;
+                color: #065f46;
+
+                &:hover {
+                  background: #a7f3d0;
+                }
+              }
+
+              &.btn-deactivate {
+                background: #fee2e2;
+                color: #991b1b;
+
+                &:hover {
+                  background: #fecaca;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .empty-state {
+      padding: 4rem 2rem;
+      text-align: center;
+
+      .material-icons {
+        font-size: 4rem;
+        color: #d1d5db;
+        margin-bottom: 1rem;
+      }
+
+      h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #374151;
+        margin: 0 0 0.5rem 0;
+      }
+
+      p {
+        color: #6b7280;
+        margin: 0;
+      }
+    }
+  }
+
+  .loading-state {
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+
+    .skeleton-table {
+      .skeleton-row {
+        display: flex;
+        padding: 1rem;
+        border-bottom: 1px solid #f3f4f6;
+
+        .skeleton-cell {
+          flex: 1;
+          height: 1.5rem;
+          background: #f3f4f6;
+          border-radius: 0.25rem;
+          margin-right: 1rem;
+          animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+
+          &:last-child {
+            margin-right: 0;
+          }
+        }
+      }
+    }
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    padding: 1rem;
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+
+    .pagination-info {
+      color: #6b7280;
+      font-size: 0.875rem;
+    }
+
+    .pagination-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      .pagination-btn {
+        width: 2rem;
+        height: 2rem;
+        border: 1px solid #d1d5db;
+        background: white;
+        border-radius: 0.375rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+
+        &:hover:not(:disabled) {
+          background: #f9fafb;
+          border-color: #9ca3af;
+        }
+
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+
+        .material-icons {
+          font-size: 1.125rem;
+        }
+      }
+
+      .page-info {
+        color: #374151;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .5;
+  }
+}
+
+// Responsive design
+@media (max-width: 1024px) {
+  .user-management {
+    padding: 1rem;
+
+    .filters-section {
+      flex-direction: column;
+
+      .search-box {
+        min-width: auto;
+      }
+
+      .filter-controls {
+        flex-wrap: wrap;
+      }
+    }
+
+    .users-table-container {
+      overflow-x: auto;
+
+      .users-table {
+        min-width: 800px;
+      }
+    }
+
+    .pagination {
+      flex-direction: column;
+      gap: 1rem;
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .user-management {
+    .users-table {
+      font-size: 0.875rem;
+
+      th, td {
+        padding: 0.75rem 0.5rem;
+      }
+    }
+  }
+}

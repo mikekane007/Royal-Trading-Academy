@@ -1,0 +1,162 @@
+<div class="user-management">
+  <div class="page-header">
+    <h1>User Management</h1>
+    <p>Manage user accounts, roles, and permissions</p>
+  </div>
+
+  <!-- Filters and Search -->
+  <div class="filters-section">
+    <div class="search-box">
+      <span class="material-icons">search</span>
+      <input
+        type="text"
+        placeholder="Search users by name or email..."
+        [(ngModel)]="searchTerm"
+        (input)="onSearchChange()"
+        class="search-input">
+    </div>
+
+    <div class="filter-controls">
+      <select 
+        [(ngModel)]="selectedRole" 
+        (change)="onRoleChange()"
+        class="filter-select">
+        <option *ngFor="let role of roles" [value]="role.value">
+          {{ role.label }}
+        </option>
+      </select>
+
+      <select 
+        [(ngModel)]="selectedStatus" 
+        (change)="onStatusChange()"
+        class="filter-select">
+        <option *ngFor="let status of statuses" [value]="status.value">
+          {{ status.label }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Users Table -->
+  <div class="users-table-container" *ngIf="!isLoading">
+    <table class="users-table">
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Enrollments</th>
+          <th>Created</th>
+          <th>Last Login</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of paginatedUsers; trackBy: trackByUserId" class="user-row">
+          <td class="user-info">
+            <div class="user-avatar">
+              {{ user.firstName.charAt(0) }}{{ user.lastName.charAt(0) }}
+            </div>
+            <div class="user-details">
+              <div class="user-name">{{ user.firstName }} {{ user.lastName }}</div>
+              <div class="user-email">{{ user.email }}</div>
+            </div>
+          </td>
+          
+          <td>
+            <select 
+              [value]="user.role"
+              (change)="updateUserRole(user, $event.target.value)"
+              class="role-select"
+              [ngClass]="getRoleBadgeClass(user.role)">
+              <option value="student">Student</option>
+              <option value="instructor">Instructor</option>
+              <option value="admin">Admin</option>
+            </select>
+          </td>
+          
+          <td>
+            <span class="status-badge" [ngClass]="getStatusBadgeClass(user.isActive)">
+              {{ user.isActive ? 'Active' : 'Inactive' }}
+            </span>
+          </td>
+          
+          <td class="enrollment-count">
+            {{ user.enrollmentCount }}
+          </td>
+          
+          <td class="date-cell">
+            {{ formatDate(user.createdAt) }}
+          </td>
+          
+          <td class="date-cell">
+            {{ formatDate(user.lastLoginAt) }}
+          </td>
+          
+          <td class="actions-cell">
+            <button
+              (click)="toggleUserStatus(user)"
+              class="action-btn"
+              [ngClass]="user.isActive ? 'btn-deactivate' : 'btn-activate'"
+              [title]="user.isActive ? 'Deactivate User' : 'Activate User'">
+              <span class="material-icons">
+                {{ user.isActive ? 'block' : 'check_circle' }}
+              </span>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="filteredUsers.length === 0">
+      <span class="material-icons">people_outline</span>
+      <h3>No users found</h3>
+      <p>Try adjusting your search or filter criteria</p>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-state" *ngIf="isLoading">
+    <div class="skeleton-table">
+      <div class="skeleton-row" *ngFor="let item of [1,2,3,4,5]">
+        <div class="skeleton-cell"></div>
+        <div class="skeleton-cell"></div>
+        <div class="skeleton-cell"></div>
+        <div class="skeleton-cell"></div>
+        <div class="skeleton-cell"></div>
+        <div class="skeleton-cell"></div>
+        <div class="skeleton-cell"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination" *ngIf="!isLoading && filteredUsers.length > 0">
+    <div class="pagination-info">
+      Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to 
+      {{ Math.min(currentPage * itemsPerPage, filteredUsers.length) }} of 
+      {{ filteredUsers.length }} users
+    </div>
+    
+    <div class="pagination-controls">
+      <button 
+        (click)="previousPage()" 
+        [disabled]="currentPage === 1"
+        class="pagination-btn">
+        <span class="material-icons">chevron_left</span>
+      </button>
+      
+      <span class="page-info">
+        Page {{ currentPage }} of {{ totalPages }}
+      </span>
+      
+      <button 
+        (click)="nextPage()" 
+        [disabled]="currentPage === totalPages"
+        class="pagination-btn">
+        <span class="material-icons">chevron_right</span>
+      </button>
+    </div>
+  </div>
+</div>
