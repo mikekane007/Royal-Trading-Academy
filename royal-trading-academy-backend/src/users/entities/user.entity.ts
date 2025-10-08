@@ -50,19 +50,19 @@ export class User extends BaseEntity {
   role: UserRole;
 
   @Column({ nullable: true })
-  profileImage: string;
+  profileImage: string | null;
 
   @Column({ default: false })
   isVerified: boolean;
 
   @Column({ nullable: true })
-  verificationToken: string;
+  verificationToken: string | null;
 
   @Column({ nullable: true })
-  resetPasswordToken: string;
+  resetPasswordToken: string | null;
 
   @Column({ nullable: true })
-  resetPasswordExpires: Date;
+  resetPasswordExpires: Date | null;
 
   @Column({
     type: 'enum',

@@ -8,28 +8,38 @@ import {
   Delete,
   UseGuards,
   ParseUUIDPipe,
+  UseInterceptors,
+  UploadedFile,
+  BadRequestException,
 } from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
   ApiResponse,
   ApiBearerAuth,
+  ApiConsumes,
 } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { UserRole, User } from './entities/user.entity';
+import { FileUploadService } from '../common/services/file-upload.service';
 
 @ApiTags('Users')
 @Controller('users')
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth('JWT-auth')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly fileUploadService: FileUploadService,
+  ) {}
 
   @Post()
   @UseGuards(RolesGuard)
@@ -113,5 +123,58 @@ export class UsersController {
   @ApiResponse({ status: 200, description: 'User activated successfully' })
   activate(@Param('id', ParseUUIDPipe) id: string) {
     return this.usersService.activate(id);
+  }
+
+  @Post('profile/avatar')
+  @UseInterceptors(FileInterceptor('avatar'))
+  @ApiConsumes('multipart/form-data')
+  @ApiOperation({ summary: 'Upload profile avatar' })
+  @ApiResponse({ status: 200, description: 'Avatar uploaded successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid file' })
+  async uploadAvatar(
+    @CurrentUser() user: User,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    if (!file) {
+      throw new BadRequestException('No file uploaded');
+    }
+
+    // Validate image file
+    this.fileUploadService.validateImageFile(file);
+
+    // Process and save file
+    const uploadedFile = this.fileUploadService.processUploadedFile(file, 'avatars');
+    
+    // Update user profile image
+    await this.usersService.updateProfileImage(user.id, uploadedFile.url);
+
+    return {
+      message: 'Avatar uploaded successfully',
+      avatarUrl: uploadedFile.url,
+    };
+  }
+
+  @Delete('profile/avatar')
+  @ApiOperation({ summary: 'Remove profile avatar' })
+  @ApiResponse({ status: 200, description: 'Avatar removed successfully' })
+  async removeAvatar(@CurrentUser() user: User) {
+    await this.usersService.removeProfileImage(user.id);
+    return { message: 'Avatar removed successfully' };
+  }
+
+  @Patch('profile/password')
+  @ApiOperation({ summary: 'Change user password' })
+  @ApiResponse({ status: 200, description: 'Password changed successfully' })
+  @ApiResponse({ status: 400, description: 'Invalid current password' })
+  async changePassword(
+    @CurrentUser() user: User,
+    @Body() changePasswordDto: ChangePasswordDto,
+  ) {
+    await this.usersService.changePassword(
+      user.id,
+      changePasswordDto.currentPassword,
+      changePasswordDto.newPassword,
+    );
+    return { message: 'Password changed successfully' };
   }
 }

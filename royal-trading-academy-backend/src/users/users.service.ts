@@ -86,4 +86,73 @@ export class UsersService {
     user.isActive = true;
     return this.usersRepository.save(user);
   }
+
+  async setPasswordResetToken(id: string, token: string, expires: Date): Promise<void> {
+    await this.usersRepository.update(id, {
+      resetPasswordToken: token,
+      resetPasswordExpires: expires,
+    });
+  }
+
+  async clearPasswordResetToken(id: string): Promise<void> {
+    await this.usersRepository.update(id, {
+      resetPasswordToken: null,
+      resetPasswordExpires: null,
+    });
+  }
+
+  async findByResetToken(token: string): Promise<User | null> {
+    return this.usersRepository.findOne({
+      where: { resetPasswordToken: token },
+    });
+  }
+
+  async findByVerificationToken(token: string): Promise<User | null> {
+    return this.usersRepository.findOne({
+      where: { verificationToken: token },
+    });
+  }
+
+  async updatePassword(id: string, newPassword: string): Promise<void> {
+    const user = await this.findById(id);
+    user.password = newPassword;
+    await this.usersRepository.save(user);
+  }
+
+  async verifyEmail(id: string): Promise<void> {
+    await this.usersRepository.update(id, {
+      isVerified: true,
+      verificationToken: null,
+    });
+  }
+
+  async updateVerificationToken(id: string, token: string): Promise<void> {
+    await this.usersRepository.update(id, {
+      verificationToken: token,
+    });
+  }
+
+  async updateProfileImage(id: string, imageUrl: string): Promise<void> {
+    await this.usersRepository.update(id, {
+      profileImage: imageUrl,
+    });
+  }
+
+  async removeProfileImage(id: string): Promise<void> {
+    await this.usersRepository.update(id, {
+      profileImage: null,
+    });
+  }
+
+  async changePassword(id: string, currentPassword: string, newPassword: string): Promise<void> {
+    const user = await this.findById(id);
+    
+    const isCurrentPasswordValid = await user.validatePassword(currentPassword);
+    if (!isCurrentPasswordValid) {
+      throw new ConflictException('Current password is incorrect');
+    }
+
+    user.password = newPassword;
+    await this.usersRepository.save(user);
+  }
 }
