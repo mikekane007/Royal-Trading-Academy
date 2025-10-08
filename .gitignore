@@ -12,6 +12,7 @@ royal-trading-academy/.angular/
 /node_modules
 royal-trading-academy/node_modules/
 royal-trading-academy-backend/node_modules/
+royal-trading-academy-backend/dist/
 npm-debug.log
 yarn-error.log
 package-lock.json
