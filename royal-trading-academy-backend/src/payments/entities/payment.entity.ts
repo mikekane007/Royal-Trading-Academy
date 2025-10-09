@@ -7,6 +7,7 @@ import {
 import { BaseEntity } from '../../common/entities/base.entity';
 import { User } from '../../users/entities/user.entity';
 import { Course } from '../../courses/entities/course.entity';
+import { PromoCode } from './promo-code.entity';
 
 export enum PaymentStatus {
   PENDING = 'pending',
@@ -83,4 +84,17 @@ export class Payment extends BaseEntity {
 
   @Column()
   courseId: string;
+
+  @ManyToOne(() => PromoCode, promoCode => promoCode.payments, { nullable: true })
+  @JoinColumn({ name: 'promoCodeId' })
+  promoCode: PromoCode;
+
+  @Column({ nullable: true })
+  promoCodeId: string;
+
+  @Column('decimal', { precision: 10, scale: 2, default: 0 })
+  discountAmount: number;
+
+  @Column({ nullable: true })
+  subscriptionType: string; // MONTHLY, YEARLY, LIFETIME
 }
