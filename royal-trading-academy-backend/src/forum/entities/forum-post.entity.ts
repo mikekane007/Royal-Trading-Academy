@@ -36,6 +36,12 @@ export class ForumPost extends BaseEntity {
   @Column({ default: false })
   isBestAnswer: boolean;
 
+  @Column({ default: false })
+  isEdited: boolean;
+
+  @Column({ default: false })
+  isHidden: boolean;
+
   @Column({ nullable: true })
   parentPostId: string; // For nested replies
 

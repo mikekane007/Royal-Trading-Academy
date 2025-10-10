@@ -44,6 +44,12 @@ export class ForumThread extends BaseEntity {
   @Column({ default: false })
   isLocked: boolean;
 
+  @Column({ default: false })
+  isPinned: boolean;
+
+  @Column({ default: false })
+  isHidden: boolean;
+
   @Column('simple-array', { nullable: true })
   tags: string[];
 

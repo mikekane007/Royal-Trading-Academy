@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Like, FindManyOptions } from 'typeorm';
+import { Repository, Like, FindManyOptions, IsNull } from 'typeorm';
 import { ForumCategory } from './entities/forum-category.entity';
 import { ForumThread } from './entities/forum-thread.entity';
 import { ForumPost, PostStatus } from './entities/forum-post.entity';
@@ -150,7 +150,7 @@ export class ForumService {
       throw new ForbiddenException('This thread is locked');
     }
 
-    let parentPost = null;
+    let parentPost: ForumPost | null = null;
     if (createPostDto.parentPostId) {
       parentPost = await this.forumPostRepository.findOne({
         where: { id: createPostDto.parentPostId },
@@ -177,8 +177,8 @@ export class ForumService {
     const skip = (page - 1) * limit;
 
     const [posts, total] = await this.forumPostRepository.findAndCount({
-      where: { threadId: threadId, parentPostId: null },
-      relations: ['author', 'replies', 'replies.author'],
+      where: { threadId: threadId, parentPostId: IsNull() },
+      relations: ['author'],
       order: { createdAt: 'ASC' },
       skip,
       take: limit,
