@@ -3,12 +3,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Like, FindManyOptions } from 'typeorm';
 import { ForumCategory } from './entities/forum-category.entity';
 import { ForumThread } from './entities/forum-thread.entity';
-import { ForumPost } from './entities/forum-post.entity';
+import { ForumPost, PostStatus } from './entities/forum-post.entity';
 import { CreateForumCategoryDto } from './dto/create-forum-category.dto';
 import { CreateForumThreadDto } from './dto/create-forum-thread.dto';
 import { CreateForumPostDto } from './dto/create-forum-post.dto';
 import { ForumQueryDto } from './dto/forum-query.dto';
-import { User } from '../users/entities/user.entity';
+import { User, UserRole } from '../users/entities/user.entity';
 
 @Injectable()
 export class ForumService {
@@ -62,7 +62,7 @@ export class ForumService {
   }
 
   async findThreads(queryDto: ForumQueryDto): Promise<{ threads: ForumThread[]; total: number }> {
-    const { page, limit, search, categoryId, courseId, sortBy, sortOrder } = queryDto;
+    const { page = 1, limit = 10, search, categoryId, courseId, sortBy, sortOrder } = queryDto;
     const skip = (page - 1) * limit;
 
     const queryBuilder = this.forumThreadRepository
@@ -124,7 +124,7 @@ export class ForumService {
   async updateThread(id: string, updateData: Partial<ForumThread>, user: User): Promise<ForumThread> {
     const thread = await this.findThreadById(id);
 
-    if (thread.author.id !== user.id && user.role !== 'ADMIN' && user.role !== 'INSTRUCTOR') {
+    if (thread.author.id !== user.id && user.role !== UserRole.ADMIN && user.role !== UserRole.INSTRUCTOR) {
       throw new ForbiddenException('You can only edit your own threads');
     }
 
@@ -135,7 +135,7 @@ export class ForumService {
   async deleteThread(id: string, user: User): Promise<void> {
     const thread = await this.findThreadById(id);
 
-    if (thread.author.id !== user.id && user.role !== 'ADMIN') {
+    if (thread.author.id !== user.id && user.role !== UserRole.ADMIN) {
       throw new ForbiddenException('You can only delete your own threads');
     }
 
@@ -146,7 +146,7 @@ export class ForumService {
   async createPost(createPostDto: CreateForumPostDto, author: User): Promise<ForumPost> {
     const thread = await this.findThreadById(createPostDto.threadId);
 
-    if (thread.isLocked && author.role !== 'ADMIN' && author.role !== 'INSTRUCTOR') {
+    if (thread.isLocked && author.role !== UserRole.ADMIN && author.role !== UserRole.INSTRUCTOR) {
       throw new ForbiddenException('This thread is locked');
     }
 
@@ -159,9 +159,9 @@ export class ForumService {
 
     const post = this.forumPostRepository.create({
       ...createPostDto,
-      author,
-      thread,
-      parentPost,
+      authorId: author.id,
+      threadId: thread.id,
+      parentPostId: createPostDto.parentPostId,
     });
 
     const savedPost = await this.forumPostRepository.save(post);
@@ -177,7 +177,7 @@ export class ForumService {
     const skip = (page - 1) * limit;
 
     const [posts, total] = await this.forumPostRepository.findAndCount({
-      where: { thread: { id: threadId }, parentPost: null },
+      where: { threadId: threadId, parentPostId: null },
       relations: ['author', 'replies', 'replies.author'],
       order: { createdAt: 'ASC' },
       skip,
@@ -197,12 +197,11 @@ export class ForumService {
       throw new NotFoundException('Forum post not found');
     }
 
-    if (post.author.id !== user.id && user.role !== 'ADMIN') {
+    if (post.author.id !== user.id && user.role !== UserRole.ADMIN) {
       throw new ForbiddenException('You can only edit your own posts');
     }
 
     post.content = content;
-    post.isEdited = true;
     return await this.forumPostRepository.save(post);
   }
 
@@ -216,7 +215,7 @@ export class ForumService {
       throw new NotFoundException('Forum post not found');
     }
 
-    if (post.author.id !== user.id && user.role !== 'ADMIN') {
+    if (post.author.id !== user.id && user.role !== UserRole.ADMIN) {
       throw new ForbiddenException('You can only delete your own posts');
     }
 
@@ -231,8 +230,12 @@ export class ForumService {
       throw new NotFoundException('Forum post not found');
     }
 
-    post.isHidden = isHidden;
-    post.moderationReason = moderationReason;
+    if (isHidden !== undefined) {
+      post.status = isHidden ? PostStatus.HIDDEN : PostStatus.PUBLISHED;
+    }
+    if (moderationReason) {
+      post.moderationReason = moderationReason;
+    }
     return await this.forumPostRepository.save(post);
   }
 
@@ -240,8 +243,7 @@ export class ForumService {
     const thread = await this.findThreadById(id);
 
     if (isLocked !== undefined) thread.isLocked = isLocked;
-    if (isPinned !== undefined) thread.isPinned = isPinned;
-    if (isHidden !== undefined) thread.isHidden = isHidden;
+    if (isPinned !== undefined) thread.isSticky = isPinned;
 
     return await this.forumThreadRepository.save(thread);
   }

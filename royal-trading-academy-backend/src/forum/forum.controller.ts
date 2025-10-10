@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { ForumService } from './forum.service';
 import { CreateForumCategoryDto } from './dto/create-forum-category.dto';
+import { UserRole } from '../users/entities/user.entity';
 import { CreateForumThreadDto } from './dto/create-forum-thread.dto';
 import { CreateForumPostDto } from './dto/create-forum-post.dto';
 import { ForumQueryDto } from './dto/forum-query.dto';
@@ -30,7 +31,7 @@ export class ForumController {
   // Category endpoints
   @Post('categories')
   @UseGuards(RolesGuard)
-  @Roles('ADMIN', 'INSTRUCTOR')
+  @Roles(UserRole.ADMIN, UserRole.INSTRUCTOR)
   async createCategory(@Body() createCategoryDto: CreateForumCategoryDto) {
     return await this.forumService.createCategory(createCategoryDto);
   }
@@ -121,7 +122,7 @@ export class ForumController {
   // Moderation endpoints
   @Put('posts/:id/moderate')
   @UseGuards(RolesGuard)
-  @Roles('ADMIN', 'INSTRUCTOR')
+  @Roles(UserRole.ADMIN, UserRole.INSTRUCTOR)
   async moderatePost(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() moderationData: { isHidden: boolean; moderationReason?: string },
@@ -135,7 +136,7 @@ export class ForumController {
 
   @Put('threads/:id/moderate')
   @UseGuards(RolesGuard)
-  @Roles('ADMIN', 'INSTRUCTOR')
+  @Roles(UserRole.ADMIN, UserRole.INSTRUCTOR)
   async moderateThread(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() moderationData: {
