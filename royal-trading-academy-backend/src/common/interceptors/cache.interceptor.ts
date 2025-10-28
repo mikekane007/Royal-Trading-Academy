@@ -3,19 +3,17 @@ import {
   NestInterceptor,
   ExecutionContext,
   CallHandler,
-  Inject,
 } from '@nestjs/common';
 import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Reflector } from '@nestjs/core';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Cache } from 'cache-manager';
+import { SimpleCacheService } from '../services/simple-cache.service';
 import { CACHE_KEY, CACHE_TTL } from '../decorators/cache.decorator';
 
 @Injectable()
 export class CacheInterceptor implements NestInterceptor {
   constructor(
-    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    private cacheService: SimpleCacheService,
     private reflector: Reflector,
   ) {}
 
@@ -34,15 +32,15 @@ export class CacheInterceptor implements NestInterceptor {
     const fullCacheKey = this.generateCacheKey(cacheKey, request);
 
     try {
-      const cachedResult = await this.cacheManager.get(fullCacheKey);
+      const cachedResult = this.cacheService.get(fullCacheKey);
       if (cachedResult) {
         return of(cachedResult);
       }
 
       return next.handle().pipe(
-        tap(async (result) => {
+        tap((result) => {
           if (result) {
-            await this.cacheManager.set(fullCacheKey, result, cacheTTL || 300);
+            this.cacheService.set(fullCacheKey, result, cacheTTL || 300);
           }
         }),
       );

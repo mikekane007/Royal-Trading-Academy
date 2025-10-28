@@ -1,98 +1,243 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Royal Trading Academy - Backend API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A comprehensive NestJS backend for the Royal Trading Academy e-learning platform with Supabase PostgreSQL database.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 🚀 Quick Start
 
-## Description
+1. **Set up PostgreSQL** - See [POSTGRESQL_SETUP.md](./POSTGRESQL_SETUP.md)
+2. **Configure environment** - Copy `.env.example` to `.env`
+3. **Install dependencies** - `npm install`
+4. **Start the app** - `npm start`
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 📚 Documentation
 
-## Project setup
+- **[POSTGRESQL_SETUP.md](./POSTGRESQL_SETUP.md)** - Database setup guide
+- **[SIMPLE_DEPLOYMENT.md](./SIMPLE_DEPLOYMENT.md)** - Deployment options
+- **[SETUP.md](./SETUP.md)** - Detailed setup instructions
+- **[AUTHENTICATION_FEATURES.md](./AUTHENTICATION_FEATURES.md)** - Authentication features
 
-```bash
-$ npm install
-```
+## 🛠️ Tech Stack
 
-## Compile and run the project
+- **Framework**: NestJS 11
+- **Database**: PostgreSQL
+- **ORM**: TypeORM
+- **Authentication**: JWT + Passport
+- **Validation**: class-validator
+- **File Upload**: Multer
+- **Payment**: Stripe
+- **Email**: Nodemailer
 
-```bash
-# development
-$ npm run start
+## ✨ Features
 
-# watch mode
-$ npm run start:dev
+- ✅ User authentication (register, login, JWT)
+- ✅ Email verification
+- ✅ Password reset
+- ✅ Role-based access control (Student, Instructor, Admin)
+- ✅ Course management (CRUD)
+- ✅ Lesson management with resources
+- ✅ Student enrollments
+- ✅ Progress tracking
+- ✅ Forum system (categories, threads, posts)
+- ✅ Payment processing (Stripe)
+- ✅ Promo codes
+- ✅ File uploads
+- ✅ Audit logging
+- ✅ Rate limiting
+- ✅ In-memory caching
 
-# production mode
-$ npm run start:prod
-```
+## 📋 Prerequisites
 
-## Run tests
+- Node.js 18+ 
+- npm or yarn
+- PostgreSQL 12+ (local, Docker, or cloud)
 
-```bash
-# unit tests
-$ npm run test
+## 🏃 Running the Application
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### Development
 
 ```bash
-$ npm install -g mau
-$ mau deploy
+# Install dependencies
+npm install
+
+# Start development server
+npm run start:dev
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### Production
 
-## Resources
+```bash
+# Build
+npm run build
 
-Check out a few resources that may come in handy when working with NestJS:
+# Start production server
+npm start
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+## 🌍 Environment Variables
 
-## Support
+Copy `.env.example` to `.env` and configure:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```env
+# PostgreSQL Database
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_USERNAME=postgres
+DATABASE_PASSWORD=password
+DATABASE_NAME=royal_trading_academy
 
-## Stay in touch
+# JWT
+JWT_SECRET=your-secret-key
+JWT_EXPIRES_IN=7d
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+# Application
+PORT=3000
+NODE_ENV=development
+CORS_ORIGIN=http://localhost:4200
+```
 
-## License
+## 📡 API Endpoints
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### Authentication
+- `POST /auth/register` - Register new user
+- `POST /auth/login` - Login user
+- `POST /auth/refresh` - Refresh token
+- `POST /auth/forgot-password` - Request password reset
+- `POST /auth/reset-password` - Reset password
+- `POST /auth/verify-email` - Verify email
+
+### Users
+- `GET /users` - Get all users (Admin)
+- `GET /users/:id` - Get user by ID
+- `PATCH /users/:id` - Update user
+- `DELETE /users/:id` - Delete user (Admin)
+
+### Courses
+- `GET /courses` - Get all courses
+- `GET /courses/:id` - Get course by ID
+- `POST /courses` - Create course (Instructor/Admin)
+- `PATCH /courses/:id` - Update course
+- `DELETE /courses/:id` - Delete course
+- `POST /courses/:id/reviews` - Add review
+
+### Enrollments
+- `POST /enrollments` - Enroll in course
+- `GET /enrollments/user/:userId` - Get user enrollments
+- `GET /enrollments/course/:courseId` - Get course enrollments
+
+### Forum
+- `GET /forum/categories` - Get categories
+- `POST /forum/categories` - Create category (Admin)
+- `GET /forum/threads` - Get threads
+- `POST /forum/threads` - Create thread
+- `GET /forum/threads/:id` - Get thread
+- `POST /forum/posts` - Create post
+- `GET /forum/posts/thread/:id` - Get thread posts
+
+### Payments
+- `POST /payments/create-intent` - Create payment intent
+- `POST /payments/confirm` - Confirm payment
+- `POST /payments/promo-codes` - Create promo code (Admin)
+- `POST /payments/validate-promo` - Validate promo code
+
+## 🗄️ Database Schema
+
+The application uses TypeORM with automatic schema synchronization in development.
+
+### Main Entities
+- **User** - User accounts with roles
+- **Course** - Course information
+- **Lesson** - Course lessons
+- **Enrollment** - Student course enrollments
+- **Progress** - Lesson completion tracking
+- **ForumCategory** - Forum categories
+- **ForumThread** - Forum threads
+- **ForumPost** - Forum posts
+- **Payment** - Payment records
+- **PromoCode** - Promotional codes
+- **AuditLog** - System audit logs
+
+## 🔒 Security Features
+
+- JWT authentication
+- Password hashing (bcrypt)
+- Role-based access control
+- Rate limiting
+- CORS protection
+- Input validation
+- SQL injection prevention (TypeORM)
+- XSS protection
+
+## 🧪 Testing
+
+```bash
+# Unit tests
+npm run test
+
+# E2E tests
+npm run test:e2e
+
+# Test coverage
+npm run test:cov
+```
+
+## 📦 Deployment
+
+### Railway (Recommended)
+1. Push code to GitHub
+2. Connect repository to Railway
+3. Add PostgreSQL database
+4. Add environment variables
+5. Deploy automatically
+
+### Render
+1. Connect GitHub repository
+2. Add PostgreSQL database
+3. Set build command: `npm install && npm run build`
+4. Set start command: `node dist/main.js`
+5. Add environment variables
+
+### Heroku
+```bash
+heroku create royal-trading-academy-api
+heroku addons:create heroku-postgresql:mini
+git push heroku main
+```
+
+See [SIMPLE_DEPLOYMENT.md](./SIMPLE_DEPLOYMENT.md) for detailed instructions.
+
+## 📊 Monitoring
+
+- Use pgAdmin or DBeaver for database management
+- Check API logs in deployment platform
+- Monitor performance with PostgreSQL queries
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License.
+
+## 🆘 Support
+
+- Check [POSTGRESQL_SETUP.md](./POSTGRESQL_SETUP.md) for database setup
+- Review [SIMPLE_DEPLOYMENT.md](./SIMPLE_DEPLOYMENT.md) for deployment
+- See [SETUP.md](./SETUP.md) for detailed instructions
+
+## 🎯 Roadmap
+
+- [ ] WebSocket support for real-time features
+- [ ] Advanced analytics dashboard
+- [ ] Video streaming optimization
+- [ ] Mobile app API
+- [ ] Multi-language support
+- [ ] Advanced search with Elasticsearch
+
+---
+
+Built with ❤️ using NestJS and PostgreSQL
