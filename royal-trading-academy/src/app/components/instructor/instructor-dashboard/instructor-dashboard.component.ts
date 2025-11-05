@@ -5,7 +5,7 @@ import { CourseService } from '../../../services/course/course.service';
 import { AuthService } from '../../../services/auth/auth.service';
 import { LoadingService } from '../../../services/loading/loading.service';
 import { NotificationService } from '../../../services/notification/notification.service';
-import { Course } from '../../../models/course/course.model';
+import { Course, CourseCategory } from '../../../models/course/course.model';
 
 interface InstructorStats {
   totalCourses: number;
@@ -96,37 +96,61 @@ export class InstructorDashboardComponent implements OnInit {
           id: 'course-1',
           title: 'Forex Trading Fundamentals',
           description: 'Learn the basics of forex trading',
-          category: 'Forex',
+          shortDescription: 'Learn the basics of forex trading',
+          category: CourseCategory.FOREX,
           level: 'beginner',
+          difficulty: 'BEGINNER' as any,
           duration: 480,
           price: 299,
+          currency: 'USD',
           rating: 4.8,
           enrollmentCount: 89,
-          instructorId: 'instructor-1',
-          instructorName: 'Current User',
+          instructor: {
+            id: 'instructor-1',
+            name: 'Current User',
+            bio: 'Experienced trader',
+            profileImage: '/assets/images/instructors/default.jpg',
+            credentials: [],
+            yearsExperience: 5
+          },
           thumbnailUrl: '/assets/images/courses/forex-fundamentals.jpg',
+          imageUrl: '/assets/images/courses/forex-fundamentals.jpg',
+          tags: ['forex', 'trading'],
           isPublished: true,
           createdAt: new Date('2024-01-15'),
           updatedAt: new Date('2024-01-20'),
-          lessons: []
+          lessons: [],
+          totalLessons: 0
         },
         {
           id: 'course-2',
           title: 'Advanced Options Strategies',
           description: 'Master complex options trading strategies',
-          category: 'Options',
+          shortDescription: 'Master complex options trading strategies',
+          category: CourseCategory.OPTIONS,
           level: 'advanced',
+          difficulty: 'ADVANCED' as any,
           duration: 720,
           price: 499,
+          currency: 'USD',
           rating: 4.6,
           enrollmentCount: 45,
-          instructorId: 'instructor-1',
-          instructorName: 'Current User',
+          instructor: {
+            id: 'instructor-1',
+            name: 'Current User',
+            bio: 'Experienced trader',
+            profileImage: '/assets/images/instructors/default.jpg',
+            credentials: [],
+            yearsExperience: 5
+          },
           thumbnailUrl: '/assets/images/courses/options-advanced.jpg',
+          imageUrl: '/assets/images/courses/options-advanced.jpg',
+          tags: ['options', 'trading'],
           isPublished: false,
           createdAt: new Date('2024-01-10'),
           updatedAt: new Date('2024-01-18'),
-          lessons: []
+          lessons: [],
+          totalLessons: 0
         }
       ];
     } catch (error) {
@@ -207,6 +231,10 @@ export class InstructorDashboardComponent implements OnInit {
 
   trackByEnrollmentId(index: number, enrollment: RecentEnrollment): string {
     return enrollment.id;
+  }
+
+  getStudentInitials(name: string): string {
+    return name.split(' ').map(n => n[0]).join('');
   }
 
   refreshDashboard(): void {

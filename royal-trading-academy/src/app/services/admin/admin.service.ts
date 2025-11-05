@@ -308,53 +308,12 @@ export class AdminService {
       throw error;
     }
   }
-}development
-      const mockAnalytics: AnalyticsData = {
-        userGrowth: [
-          { month: 'Jan', users: 120 },
-          { month: 'Feb', users: 180 },
-          { month: 'Mar', users: 250 },
-          { month: 'Apr', users: 320 },
-          { month: 'May', users: 410 },
-          { month: 'Jun', users: 520 }
-        ],
-        courseEnrollments: [
-          { course: 'Forex Basics', enrollments: 450 },
-          { course: 'Stock Trading 101', enrollments: 380 },
-          { course: 'Crypto Trading', enrollments: 290 },
-          { course: 'Options Strategies', enrollments: 220 }
-        ],
-        revenue: [
-          { month: 'Jan', amount: 12500 },
-          { month: 'Feb', amount: 18900 },
-          { month: 'Mar', amount: 25600 },
-          { month: 'Apr', amount: 32100 },
-          { month: 'May', amount: 41800 },
-          { month: 'Jun', amount: 52300 }
-        ],
-        topInstructors: [
-          { name: 'Sarah Chen', students: 1250, revenue: 45600 },
-          { name: 'Michael Rodriguez', students: 980, revenue: 38200 },
-          { name: 'David Kim', students: 750, revenue: 29800 },
-          { name: 'Lisa Johnson', students: 620, revenue: 24100 }
-        ]
-      };
-
-      return mockAnalytics;
-
-      // Uncomment when backend is ready:
-      // return await this.http.get<AnalyticsData>(`${this.apiUrl}/analytics`).toPromise();
-    } catch (error) {
-      console.error('Error fetching analytics data:', error);
-      throw error;
-    }
-  }
 
   // Content Moderation
   async moderateContent(contentId: string, action: 'approve' | 'reject', reason?: string): Promise<void> {
     try {
       // Mock implementation - replace with actual API call
-      console.log(`Moderating content ${contentId} with action ${action}`, reason ? `Reason: ${reason}` : ''),
+      console.log(`Moderating content ${contentId} with action ${action}`, reason ? `Reason: ${reason}` : '');
       
       // Uncomment when backend is ready:
       // await this.http.put(`${this.apiUrl}/content/${contentId}/moderate`, { action, reason }).toPromise();

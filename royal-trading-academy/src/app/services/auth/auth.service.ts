@@ -8,6 +8,7 @@ import { LoadingService } from '../loading/loading.service';
 import { NotificationService } from '../notification/notification.service';
 import { SecureStorageService } from '../security/secure-storage.service';
 import { SanitizationService } from '../security/sanitization.service';
+import { environment } from '../../../environments/environment';
 
 export interface LoginRequest {
   email: string;
@@ -44,7 +45,7 @@ export interface ErrorResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly API_URL = 'http://localhost:8080/api/auth'; // TODO: Move to environment
+  private readonly API_URL = `${environment.apiUrl}/auth`;
   private readonly MAX_LOGIN_ATTEMPTS = 5;
   private readonly LOCKOUT_DURATION = 15 * 60 * 1000; // 15 minutes
   private readonly TOKEN_REFRESH_THRESHOLD = 5 * 60 * 1000; // 5 minutes before expiry

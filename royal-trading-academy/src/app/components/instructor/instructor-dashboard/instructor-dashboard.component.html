@@ -166,7 +166,7 @@
           class="activity-item"
           *ngFor="let enrollment of recentEnrollments; trackBy: trackByEnrollmentId">
           <div class="student-avatar">
-            {{ enrollment.studentName.split(' ').map(n => n[0]).join('') }}
+            {{ getStudentInitials(enrollment.studentName) }}
           </div>
           
           <div class="activity-content">

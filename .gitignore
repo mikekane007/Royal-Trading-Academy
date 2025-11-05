@@ -75,3 +75,10 @@ pids
 **/.kiro/
 **/.kiro/*
 
+# Documentation files (generated during development)
+DEPLOYMENT_COMPLETE.md
+FRONTEND_BACKEND_STARTUP.md
+START_SERVERS.md
+POSTGRESQL_SETUP_COMPLETE.md
+PROBLEMS_FIXED.md
+royal-trading-academy/FRONTEND_GUIDE.md

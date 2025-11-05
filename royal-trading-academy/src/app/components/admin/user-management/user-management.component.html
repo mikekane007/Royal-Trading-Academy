@@ -66,7 +66,7 @@
           <td>
             <select 
               [value]="user.role"
-              (change)="updateUserRole(user, $event.target.value)"
+              (change)="onRoleSelectChange($event, user)"
               class="role-select"
               [ngClass]="getRoleBadgeClass(user.role)">
               <option value="student">Student</option>

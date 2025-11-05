@@ -22,6 +22,7 @@ export class UserManagementComponent implements OnInit {
   itemsPerPage = 20;
   totalUsers = 0;
   isLoading = true;
+  Math = Math; // Expose Math to template
 
   roles = [
     { value: '', label: 'All Roles' },
@@ -96,6 +97,12 @@ export class UserManagementComponent implements OnInit {
 
   onStatusChange(): void {
     this.applyFilters();
+  }
+
+  onRoleSelectChange(event: Event, user: UserManagement): void {
+    const selectElement = event.target as HTMLSelectElement;
+    const newRole = selectElement.value;
+    this.updateUserRole(user, newRole);
   }
 
   async updateUserRole(user: UserManagement, newRole: string): Promise<void> {

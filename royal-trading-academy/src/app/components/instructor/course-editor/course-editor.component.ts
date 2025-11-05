@@ -92,13 +92,24 @@ export class CourseEditorComponent implements OnInit {
       this.isLoading = true;
       this.loadingService.setLoading(true);
 
-      const course = await this.courseService.getCourseById(this.courseId);
-      this.populateForm(course);
+      this.courseService.getCourseById(this.courseId).subscribe({
+        next: (course) => {
+          this.populateForm(course);
+          this.isLoading = false;
+          this.loadingService.setLoading(false);
+        },
+        error: (error) => {
+          console.error('Error loading course:', error);
+          this.notificationService.showError('Failed to load course');
+          this.router.navigate(['/instructor/dashboard']);
+          this.isLoading = false;
+          this.loadingService.setLoading(false);
+        }
+      });
     } catch (error) {
       console.error('Error loading course:', error);
       this.notificationService.showError('Failed to load course');
       this.router.navigate(['/instructor/dashboard']);
-    } finally {
       this.isLoading = false;
       this.loadingService.setLoading(false);
     }
@@ -112,16 +123,11 @@ export class CourseEditorComponent implements OnInit {
       level: course.level,
       price: course.price,
       thumbnailUrl: course.thumbnailUrl,
-      prerequisites: course.prerequisites || '',
+      prerequisites: '', // Course model doesn't have prerequisites
     });
 
-    // Populate learning objectives
-    const objectivesArray = this.courseForm.get('learningObjectives') as FormArray;
-    if (course.learningObjectives) {
-      course.learningObjectives.forEach(objective => {
-        objectivesArray.push(this.fb.control(objective, Validators.required));
-      });
-    }
+    // Populate learning objectives - Course model doesn't have this, skip for now
+    // const objectivesArray = this.courseForm.get('learningObjectives') as FormArray;
 
     // Populate lessons
     const lessonsArray = this.courseForm.get('lessons') as FormArray;
@@ -139,7 +145,7 @@ export class CourseEditorComponent implements OnInit {
       description: [lesson?.description || '', Validators.required],
       videoUrl: [lesson?.videoUrl || '', Validators.required],
       duration: [lesson?.duration || 0, [Validators.required, Validators.min(1)]],
-      order: [lesson?.order || 0, Validators.required],
+      order: [lesson?.orderIndex || 0, Validators.required], // Use orderIndex from Lesson model
       isPreview: [lesson?.isPreview || false]
     });
   }
@@ -279,8 +285,7 @@ export class CourseEditorComponent implements OnInit {
       level: formValue.level,
       price: formValue.price,
       thumbnailUrl: formValue.thumbnailUrl,
-      prerequisites: formValue.prerequisites,
-      learningObjectives: formValue.learningObjectives.filter((obj: string) => obj.trim()),
+      // prerequisites and learningObjectives are not in Course model, skip them
       lessons: formValue.lessons.map((lesson: LessonForm, index: number) => ({
         ...lesson,
         order: index + 1
